@@ -19,9 +19,9 @@
 //        return fireStationService.saveFireStation(fireStation);
 //    }
 //
-//    @GetMapping("/firestation/{id}")
-//    public FireStation getFireStation (@PathVariable("id")final String id){
-//        Optional<FireStation> fireStations =fireStationService.getFireStation(id);
+//    @GetMapping("/firestation/{station}")
+//    public FireStation getFireStation (@PathVariable("station")final String station){
+//        Optional<FireStation> fireStations =fireStationService.getFireStation(station);
 //        if(fireStations.isPresent()){
 //            return fireStations.get();
 //        }
@@ -30,23 +30,23 @@
 //        }
 //    }
 //    @GetMapping("/firestations")
-//    public Iterable<FireStation> getFireStations(){
+//    public List<FireStation> getFireStations(){
 //        return fireStationService.getFireStations();
 //    }
 //
-//    @PutMapping("/firestation/{id}")
-//    public FireStation updateFireStation (@PathVariable("id") final String id, @RequestBody FireStation fireStation){
-//        Optional<FireStation> f =fireStationService.getFireStation(id);
+//    @PutMapping("/firestation/{station}")
+//    public FireStation updateFireStation (@PathVariable("station") final String station, @RequestBody FireStation fireStation){
+//        Optional<FireStation> f =fireStationService.getFireStation(station);
 //        if (f.isPresent()){
 //            FireStation currentFireStation = f.get();
 //
-//            String address = fireStation.getAddress();
-//            if(address != null){
-//                currentFireStation.setAddress(address);
+//            List<String> addresses = fireStation.getAddresses();
+//            if(addresses != null){
+//                currentFireStation.addAddress(addresses);
 //            }
-//            String station = fireStation.getId();
+//            String station1 = fireStation.getStation();
 //            if(station != null){
-//                currentFireStation.setId(id);
+//                currentFireStation.setStation(station1);
 //            }
 //            fireStationService.saveFireStation(currentFireStation);
 //            return currentFireStation;
@@ -56,8 +56,8 @@
 //        }
 //    }
 //
-//    @DeleteMapping("/firestation/{id}")
-//    public void deleteFireStation(@PathVariable("id")final String id){
-//        fireStationService.deleteFireStations(id);
+//    @DeleteMapping("/firestation/{station}")
+//    public void deleteFireStation(@PathVariable("station")final String station){
+//        fireStationService.deleteFireStations(station);
 //    }
 //}

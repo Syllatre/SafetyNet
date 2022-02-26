@@ -4,47 +4,43 @@ package com.application.safetynet.model;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FireStation {
 
 
-
     private String station;
-    private String address;
     private List<String> addresses;
 
-    public void addAddress(String address) {
-
-        this.addresses.add(address);
-
+    public FireStation(String station, ArrayList<String> addresses) {
     }
-
 
     public String getStation() {
         return station;
     }
 
-
     public void setStation(String station) {
         this.station = station;
     }
 
-    public String getAddress() {
-        return address;
+    public List<String> getAddresses() {
+        return addresses;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddresses(List<String> addresses) {
+        this.addresses = addresses;
+    }
+
+    public void addAddress(String address)  {
+            addresses.add(address);
     }
 
     @Override
     public String toString() {
         return "FireStation{" +
                 "station='" + station + '\'' +
-                ", address='" + address + '\'' +
                 ", addresses=" + addresses +
                 '}';
     }
 }
-

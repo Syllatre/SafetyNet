@@ -12,9 +12,9 @@ public interface FireStationRepository  {
 
     public List<FireStation> findAll();
 
-    public Optional<FireStation> findById(String id);
-
-    public void deleteById(String id);
-
-    public FireStation save(FireStation fireStations);
+//    public Optional<FireStation> findById(String id);
+//
+//    public void deleteById(String id);
+//
+//    public FireStation save(FireStation fireStations);
 }

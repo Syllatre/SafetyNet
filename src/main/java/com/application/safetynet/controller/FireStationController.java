@@ -1,18 +1,18 @@
-//package com.application.safetynet.controller;
+package com.application.safetynet.controller;
+
+import com.application.safetynet.model.FireStation;
+import com.application.safetynet.service.FireStationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+public class FireStationController {
 //
-//import com.application.safetynet.model.FireStation;
-//import com.application.safetynet.service.FireStationService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//@RestController
-//public class FireStationController {
-//
-//    @Autowired
-//    private FireStationService fireStationService;
+    @Autowired
+    private FireStationService fireStationService;
 //
 //    @PostMapping("/firestation")
 //    public FireStation createFireStation(@RequestBody FireStation fireStation){
@@ -29,10 +29,10 @@
 //            return  null;
 //        }
 //    }
-//    @GetMapping("/firestations")
-//    public List<FireStation> getFireStations(){
-//        return fireStationService.getFireStations();
-//    }
+    @GetMapping("/firestations")
+    public List<FireStation> getFireStations(){
+        return fireStationService.getFireStations();
+    }
 //
 //    @PutMapping("/firestation/{station}")
 //    public FireStation updateFireStation (@PathVariable("station") final String station, @RequestBody FireStation fireStation){
@@ -60,4 +60,4 @@
 //    public void deleteFireStation(@PathVariable("station")final String station){
 //        fireStationService.deleteFireStations(station);
 //    }
-//}
+}

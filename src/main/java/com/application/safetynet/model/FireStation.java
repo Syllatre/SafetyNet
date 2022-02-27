@@ -33,7 +33,12 @@ public class FireStation {
     }
 
     public void addAddress(String address)  {
+        if (address == null){
+            address = "empty";
+        }
+        else{
             addresses.add(address);
+        }
     }
 
     @Override

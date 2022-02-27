@@ -16,8 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 public class InMemoryFireStationRepositoryTest {
 
+    @Autowired
+    InMemoryFireStationRepository inMemoryFireStationRepository;
 
     Map<String, FireStation> stringFireStationMap = new HashMap<>();
     @Test

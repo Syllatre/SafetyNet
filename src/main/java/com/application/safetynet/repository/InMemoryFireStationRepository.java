@@ -47,18 +47,18 @@ public class InMemoryFireStationRepository implements FireStationRepository{
         return new ArrayList<>(stringFireStationMap.values());
     }
 
-    @Override
-    public Optional<FireStation> findById(String station) {
-        return Optional.ofNullable(station).map(stringFireStationMap::get);
-    }
-
-    @Override
-    public void deleteById(String station) {
-        stringFireStationMap.remove(station);
-    }
-
-    @Override
-    public FireStation save(FireStation fireStations) {
-        return null;
-    }
+//    @Override
+//    public Optional<FireStation> findById(String station) {
+//        return Optional.ofNullable(station).map(stringFireStationMap::get);
+//    }
+//
+//    @Override
+//    public void deleteById(String station) {
+//        stringFireStationMap.remove(station);
+//    }
+//
+//    @Override
+//    public FireStation save(FireStation fireStations) {
+//        return null;
+//    }
 }

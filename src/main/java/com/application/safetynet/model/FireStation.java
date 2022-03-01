@@ -3,18 +3,23 @@ package com.application.safetynet.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class FireStation {
 
 
     private String station;
+
+
     private List<String> addresses;
 
-    public FireStation(String station, ArrayList<String> addresses) {
-    }
+
 
     public String getStation() {
         return station;
@@ -34,7 +39,7 @@ public class FireStation {
 
     public void addAddress(String address)  {
         if (address == null){
-            address = "empty";
+            new ArrayList<>(this.addresses);
         }
         else{
             addresses.add(address);

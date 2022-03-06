@@ -1,6 +1,7 @@
 package com.application.safetynet.repository;
 
 import com.application.safetynet.model.FireStation;
+import com.application.safetynet.model.FireStationDao;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public class InMemoryFireStationRepository implements FireStationRepository{
 
     @Override
     public List<FireStation> findAll() {
+        logger.info("show all fire station");
         return new ArrayList<>(stringFireStationMap.values());
     }
 
@@ -57,9 +59,29 @@ public class InMemoryFireStationRepository implements FireStationRepository{
     }
 
     @Override
-    public void deleteByStation(String station) {
-        stringFireStationMap.remove(station);
+    public ArrayList<FireStation> deleteFireStation(FireStationDao id) {
+        if(id.getAddress() != null) {
+            try{
+            stringFireStationMap.entrySet().removeIf(e -> e.getValue().getAddresses().contains(id.getAddress()));
+            logger.info(id.getAddress() +  "is deleted");
+            logger.info("now there is " + stringFireStationMap.size() + " Firestations");
+            return new ArrayList<>(stringFireStationMap.values());}
+            catch (Exception e){
+                logger.error("failed to add the Firestation", e);
+            }
+        }
+        if(id.getStation() != null) {
+            try {
+                stringFireStationMap.entrySet().removeIf(e -> e.getValue().getStation().equals(id.getStation()));
+                logger.info(id.getStation() +  "is deleted");
+                logger.info("now there is " + stringFireStationMap.size() + " Firestations");
+            }catch(Exception e){
+                logger.error("failed to add the Firestation", e);
+            }
+        }
+        return new ArrayList<>(stringFireStationMap.values());
     }
+
 
     @Override
     public FireStation save(FireStation fireStations) {

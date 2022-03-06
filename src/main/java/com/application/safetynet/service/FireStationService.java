@@ -1,6 +1,7 @@
 package com.application.safetynet.service;
 
 import com.application.safetynet.model.FireStation;
+import com.application.safetynet.model.FireStationDao;
 import com.application.safetynet.repository.FireStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class FireStationService {
         return fireStationRepository.findAll();
     }
 
-    public void deleteFireStations(final String station){
-        fireStationRepository.deleteByStation(station);
+    public void deleteFireStations(FireStationDao id){
+        fireStationRepository.deleteFireStation(id);
     }
 
     public FireStation saveFireStation(FireStation fireStations){

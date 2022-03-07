@@ -85,7 +85,7 @@ public class InMemoryFireStationRepository implements FireStationRepository{
 
     @Override
     public FireStation save(FireStation fireStations) {
-        return stringFireStationMap.put(fireStations.getStation(),fireStations);
+            return stringFireStationMap.put(fireStations.getStation(),fireStations);
     }
 
 

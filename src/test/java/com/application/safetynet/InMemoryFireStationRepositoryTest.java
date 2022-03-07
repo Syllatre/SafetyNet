@@ -1,12 +1,10 @@
 package com.application.safetynet;
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.FireStationDao;
 import com.application.safetynet.repository.FireStationRepository;
-import com.application.safetynet.repository.InMemoryFireStationRepository;
 
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.LongStream;
+
 
 
 @SpringBootTest
@@ -23,8 +21,6 @@ public class InMemoryFireStationRepositoryTest {
     @Autowired
     FireStationRepository inMemoryFireStationRepository;
 
-    @Before
-
 
     @Test
     public void initTest() throws IOException {
@@ -32,8 +28,8 @@ public class InMemoryFireStationRepositoryTest {
         List<FireStation> fireStations = inMemoryFireStationRepository.findAll();
         Assertions.assertEquals(fireStations.size(),4);
         Assertions.assertNotNull(fireStations);
-
     }
+
     @Test
     public void findAllTest(){
         List<FireStation> fireStations = inMemoryFireStationRepository.findAll();

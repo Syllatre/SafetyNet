@@ -1,7 +1,11 @@
 package com.application.safetynet.model;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Person {
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
     private String address;
     private String city;
@@ -21,6 +25,7 @@ public class Person {
     }
     public Person(){};
 
+    
     public String getFirstName() {
         return firstName;
     }

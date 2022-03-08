@@ -21,7 +21,10 @@ public class FireStationController {
 
     @PostMapping("/firestation")
     public FireStation createFireStation(@RequestBody FireStationDao fireStationDao){
+        logger.info("http://localhost:8080/firestation");
+        logger.info("Firestation: " + fireStationDao);
         List<String> address = new ArrayList<>();
+
         address.add(fireStationDao.getAddress());
         FireStation convertFireStationDao = new FireStation(fireStationDao.getStation(),address);
         return fireStationService.saveFireStation(convertFireStationDao);

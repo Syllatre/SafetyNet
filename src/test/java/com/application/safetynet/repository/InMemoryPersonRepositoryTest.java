@@ -1,27 +1,24 @@
-package com.application.safetynet;
+package com.application.safetynet.repository;
 
 
 import com.application.safetynet.model.Person;
-import com.application.safetynet.repository.PersonRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.List;
 
-@SpringBootTest
+
 public class InMemoryPersonRepositoryTest {
 
-    @Autowired
-    PersonRepository inMemoryPersonRepository;
+
+    PersonRepository inMemoryPersonRepository = new InMemoryPersonRepository();
 
     @Test
     public void initTest() throws IOException {
         inMemoryPersonRepository.init();
-       List<Person> personList = inMemoryPersonRepository.findAll();
-        Assertions.assertEquals(personList.size(),23);
+        List<Person> personList = inMemoryPersonRepository.findAll();
+        Assertions.assertEquals(personList.size(), 23);
         Assertions.assertNotNull(personList);
     }
 
@@ -36,15 +33,17 @@ public class InMemoryPersonRepositoryTest {
         updatePerson.setEmail("aimen@gmail.com");
         updatePerson.setPhone("0465874525");
         updatePerson.setZip("75013");
-        List<Person> personList= inMemoryPersonRepository.update(updatePerson);
-        Assertions.assertEquals(personList.size(),23);
-        Assertions.assertTrue(personList.stream().anyMatch(element->element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks") && element.getPhone().equals("0465874525")));
+        List<Person> personList = inMemoryPersonRepository.update(updatePerson);
+        Assertions.assertEquals(personList.size(), 23);
+        Assertions.assertTrue(personList.stream().anyMatch(element -> element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks") && element.getPhone().equals("0465874525")));
     }
 
     @Test
-    public void findAllTest(){
+    public void findAllTest() throws IOException {
+        inMemoryPersonRepository.init();
         List<Person> personList = inMemoryPersonRepository.findAll();
         Assertions.assertNotNull(personList);
+        Assertions.assertEquals(personList.size(), 23);
     }
 
     @Test
@@ -59,20 +58,28 @@ public class InMemoryPersonRepositoryTest {
         createPerson.setPhone("0465874525");
         createPerson.setZip("75013");
         List<Person> personList = inMemoryPersonRepository.create(createPerson);
-        Assertions.assertEquals(personList.size(),24);
-        Assertions.assertTrue(personList.stream().anyMatch(element->element.getFirstName().equals("Aimen") && element.getLastName().equals("Jerbi") && element.getPhone().equals("0465874525")));
+        Assertions.assertTrue(personList.stream().anyMatch(element -> element.getFirstName().equals("Aimen") && element.getLastName().equals("Jerbi") && element.getPhone().equals("0465874525")));
     }
 
     @Test
-    public void delete() throws Exception {
+    public void deleteIfTrue() throws Exception {
         inMemoryPersonRepository.init();
         Person personDelete = new Person();
         personDelete.setFirstName("Zach");
         personDelete.setLastName("Zemicks");
         List<Person> delete = inMemoryPersonRepository.delete(personDelete);
-        System.out.println(delete);
-        Assertions.assertEquals(delete.size(),22);
-        Assertions.assertFalse(delete.stream().anyMatch(element->element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks")));
+        Assertions.assertEquals(delete.size(), 22);
+        Assertions.assertFalse(delete.stream().anyMatch(element -> element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks")));
+    }
+
+    @Test
+    public void deleteIfFalse() throws Exception {
+        inMemoryPersonRepository.init();
+        Person personDelete = new Person();
+        personDelete.setFirstName("");
+        personDelete.setLastName("Zemicks");
+        List<Person> delete = inMemoryPersonRepository.delete(personDelete);
+        Assertions.assertEquals(delete.size(), 23);
     }
 }
 

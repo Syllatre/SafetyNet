@@ -23,9 +23,13 @@ public class Person {
         this.phone = phone;
         this.email = email;
     }
-    public Person(){};
 
-    
+    public Person() {
+    }
+
+    ;
+
+
     public String getFirstName() {
         return firstName;
     }

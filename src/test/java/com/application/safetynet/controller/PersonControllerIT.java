@@ -1,7 +1,6 @@
 package com.application.safetynet.controller;
 
 
-import com.application.safetynet.model.FireStationDao;
 import com.application.safetynet.model.Person;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -25,52 +24,53 @@ public class PersonControllerIT {
     public MockMvc mockMvc;
 
 
-    public static String asJsonString(final Object object){
-        try{
+    public static String asJsonString(final Object object) {
+        try {
             return new ObjectMapper().writeValueAsString(object);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void getFireStationsTest() throws Exception {
+    public void getPersonsIT() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/persons")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName",is("Zach")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(23)));
     }
 
     @Test
-    public void addPersonTest() throws Exception {
+    public void addPersonIT() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/person")
-                        .content(asJsonString(new Person("Aimen","sasa","15 rue des oiseaux", "paris","75013","0145284578","aimen@gmail.com")))
+                        .content(asJsonString(new Person("Aimen", "sasa", "15 rue des oiseaux", "paris", "75013", "0145284578", "aimen@gmail.com")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Aimen"));
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void updateTest() throws Exception {
-        mockMvc.perform( MockMvcRequestBuilders
-                        .put("/person/{station}", 2)
-                        .content(asJsonString(new FireStationDao("3", null)))
+    public void updatePersonIT() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/person")
+                        .content(asJsonString(new Person("Zach", "Zemicks", "15 rue des oiseaux", "paris", "75013", "0145284578", "aimen@gmail.com")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.station").value("3"));
+                .andExpect(status().isOk());
 
     }
 
-//    @Test
-//    public void deleteEmployeeAPI() throws Exception
-//    {
-//        mockMvc.perform( MockMvcRequestBuilders.delete("/person")
-//                .content(asJsonString(new Person("Zach", "Zemicks", null, null,null,null,null)))
-//                .andExpect(status().isAccepted()));
-//    }
+    @Test
+    public void deletePersonIT() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/person")
+                        .content(asJsonString(new Person("Zach", "Zemicks", null, null, null, null, null)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+
+    }
 }

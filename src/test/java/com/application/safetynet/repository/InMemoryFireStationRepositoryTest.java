@@ -1,10 +1,11 @@
-package com.application.safetynet;
+package com.application.safetynet.repository;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.application.safetynet.model.FireStation;
-import com.application.safetynet.model.FireStationDao;
+import com.application.safetynet.model.FireStationDto;
 import com.application.safetynet.repository.FireStationRepository;
 
+import com.application.safetynet.repository.InMemoryFireStationRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,11 @@ import java.util.*;
 
 
 
-@SpringBootTest
 public class InMemoryFireStationRepositoryTest {
 
-    @Autowired
-    FireStationRepository inMemoryFireStationRepository;
+
+    FireStationRepository inMemoryFireStationRepository = new InMemoryFireStationRepository() {
+    };
 
 
     @Test
@@ -47,7 +48,7 @@ public class InMemoryFireStationRepositoryTest {
     @Test
     public void deleteFireStationWithStationTest() throws IOException{
         inMemoryFireStationRepository.init();
-        FireStationDao id = new FireStationDao();
+        FireStationDto id = new FireStationDto();
         id.setStation("2");
         List<FireStation> fireStations = inMemoryFireStationRepository.deleteFireStation(id);
         Assertions.assertFalse(fireStations.stream().anyMatch(element->element.getStation().equals("2")));
@@ -56,7 +57,7 @@ public class InMemoryFireStationRepositoryTest {
     @Test
     public void deleteFireStationWithAddressTest() throws IOException{
         inMemoryFireStationRepository.init();
-        FireStationDao id = new FireStationDao();
+        FireStationDto id = new FireStationDto();
         id.setAddress("29 15th St");
         List<FireStation> fireStations = inMemoryFireStationRepository.deleteFireStation(id);
         Assertions.assertFalse(fireStations.stream().anyMatch(element->element.getAddresses().contains("29 15th St")));
@@ -65,7 +66,7 @@ public class InMemoryFireStationRepositoryTest {
     @Test
     public void deleteFireStationWithAddressThrowsTest() throws IOException{
         inMemoryFireStationRepository.init();
-        FireStationDao id = new FireStationDao();
+        FireStationDto id = new FireStationDto();
         id.setAddress("UNKNOWN");
         List<FireStation> fireStations = inMemoryFireStationRepository.deleteFireStation(id);
 
@@ -77,7 +78,7 @@ public class InMemoryFireStationRepositoryTest {
     @Test
     public void deleteFireStationWithStationThrowsTest() throws IOException{
         inMemoryFireStationRepository.init();
-        FireStationDao id = new FireStationDao();
+        FireStationDto id = new FireStationDto();
         id.setStation("UNKNOWN");
         List<FireStation> fireStations = inMemoryFireStationRepository.deleteFireStation(id);
 

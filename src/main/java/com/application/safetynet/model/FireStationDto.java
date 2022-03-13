@@ -1,14 +1,16 @@
 package com.application.safetynet.model;
 
-public class FireStationDao {
+public class FireStationDto {
     String station;
     String address;
 
-    public FireStationDao(String station, String address) {
+    public FireStationDto(String station, String address) {
         this.station = station;
         this.address = address;
     }
-    public FireStationDao(){}
+
+    public FireStationDto() {
+    }
 
     public String getStation() {
         return station;
@@ -28,9 +30,10 @@ public class FireStationDao {
 
     @Override
     public String toString() {
-        return "FireStationDao{" +
+        return "FireStationDto{" +
                 "station='" + station + '\'' +
                 ", address='" + address + '\'' +
                 '}';
     }
+
 }

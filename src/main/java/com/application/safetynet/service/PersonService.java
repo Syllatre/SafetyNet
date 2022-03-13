@@ -14,16 +14,19 @@ public class PersonService {
     @Autowired
     PersonRepository personRepository;
 
-    public List<Person> getPersons(){
+    public List<Person> getPersons() {
         return personRepository.findAll();
     }
-    public List<Person> createPerson(Person person){
+
+    public List<Person> createPerson(Person person) {
         return personRepository.create(person);
     }
-    public List<Person> delete (Person personDelete){
+
+    public List<Person> delete(Person personDelete) {
         return personRepository.delete(personDelete);
     }
-    public List<Person> update (Person personUpdate){
+
+    public List<Person> update(Person personUpdate) {
         return personRepository.update(personUpdate);
     }
 }

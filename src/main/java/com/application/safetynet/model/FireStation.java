@@ -1,7 +1,6 @@
 package com.application.safetynet.model;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +11,13 @@ public class FireStation {
         this.addresses = addresses;
     }
 
-    public FireStation(){}
+    public FireStation() {
+    }
 
     private String station;
 
 
     private List<String> addresses;
-
 
 
     public String getStation() {
@@ -37,11 +36,10 @@ public class FireStation {
         this.addresses = addresses;
     }
 
-    public void addAddress(String address)  {
-        if (address == null){
+    public void addAddress(String address) {
+        if (address == null) {
             addresses = new ArrayList<>();
-        }
-        else{
+        } else {
             addresses.add(address);
         }
     }

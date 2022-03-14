@@ -71,7 +71,7 @@ public class InMemoryPersonRepository implements PersonRepository {
         for (Person person : stringPersonMap.values()) {
             if (personUpdate.getFirstName().equalsIgnoreCase(person.getFirstName())
                     && personUpdate.getFirstName().equalsIgnoreCase(person.getFirstName())) {
-                person.setAddress(personUpdate.getAddress());
+                logger.info(personUpdate.getFirstName() + " " + personUpdate.getLastName()+"is update");
                 person.setCity(personUpdate.getCity());
                 person.setEmail(personUpdate.getEmail());
                 person.setPhone(personUpdate.getPhone());

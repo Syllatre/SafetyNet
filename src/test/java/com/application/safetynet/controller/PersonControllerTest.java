@@ -1,13 +1,9 @@
 package com.application.safetynet.controller;
 
 
-import com.application.safetynet.model.FireStation;
-import com.application.safetynet.model.FireStationDto;
 import com.application.safetynet.model.Person;
 import com.application.safetynet.service.PersonService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,7 +42,7 @@ public class PersonControllerTest {
         String zip = "44000";
         String phone = "0213802975";
         String email = "emilie@gmail.com";
-        person = new Person(firstName,lastName,address,city,zip,phone,email);
+        person = new Person(firstName, lastName, address, city, zip, phone, email);
     }
 
     @Test
@@ -63,7 +57,7 @@ public class PersonControllerTest {
 
         List<Person> personList = new ArrayList<>();
         personList.add(person);
-        personList.add(new Person(firstName,lastName,address,city,zip,phone,email));
+        personList.add(new Person(firstName, lastName, address, city, zip, phone, email));
 
         Mockito.when(personService.getPersons()).thenReturn(personList);
         mockMvc.perform(get("/persons")
@@ -76,7 +70,7 @@ public class PersonControllerTest {
     @Test
     void deletePerson() throws Exception {
         Person inputPerson = new Person();
-       inputPerson.setFirstName("Emilie");
+        inputPerson.setFirstName("Emilie");
         inputPerson.setLastName("Petit");
         List<Person> personList = new ArrayList<>();
         personList.add(person);
@@ -93,8 +87,8 @@ public class PersonControllerTest {
         personList.add(person);
         when(personService.createPerson(person)).thenReturn(personList);
         mockMvc.perform(post("/person")
-                .content(new ObjectMapper().writeValueAsString(person))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(new ObjectMapper().writeValueAsString(person))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -104,9 +98,9 @@ public class PersonControllerTest {
         personList.add(person);
         when(personService.update(person)).thenReturn(personList);
         mockMvc.perform(put("/person")
-                       .content(new ObjectMapper().writeValueAsString(person))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(new ObjectMapper().writeValueAsString(person))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 //                .andExpect(jsonPath("$.firstName").value("Emilie"))
 //                .andExpect(jsonPath("$.city").value("Nantes"));

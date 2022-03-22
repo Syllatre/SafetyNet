@@ -1,7 +1,7 @@
 package com.application.safetynet.repository;
 
 import com.application.safetynet.model.FireStation;
-import com.application.safetynet.model.FireStationDto;
+import com.application.safetynet.model.dto.FireStationDto;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import org.slf4j.Logger;
@@ -16,11 +16,11 @@ import java.nio.file.Files;
 import java.util.*;
 
 @Repository
-public class InMemoryFireStationRepository implements FireStationRepository{
+public class InMemoryFireStationRepository implements FireStationRepository {
     private static Logger logger = LoggerFactory.getLogger(InMemoryFireStationRepository.class);
 
 
-    private Map<String, FireStation>stringFireStationMap = new HashMap<>();
+    private Map<String, FireStation> stringFireStationMap = new HashMap<>();
 
     @PostConstruct
     public void init() throws IOException {
@@ -29,22 +29,22 @@ public class InMemoryFireStationRepository implements FireStationRepository{
             logger.info(" FireStation data initialized");
             File file = ResourceUtils.getFile("classpath:data.json");
             content = Files.readString(file.toPath());
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.error("failed to load firestation data", e);
         }
-        Any fireStationsAny = JsonIterator.deserialize(content).get("firestations",'*');
-        fireStationsAny.forEach(element->{
+        Any fireStationsAny = JsonIterator.deserialize(content).get("firestations", '*');
+        fireStationsAny.forEach(element -> {
             String station = element.get("station").toString();
             String address = element.get("address").toString();
             if (!stringFireStationMap.containsKey(station)) {
                 ArrayList<String> addresses = new ArrayList<>();
                 addresses.add(address);
                 stringFireStationMap.put(station, new FireStation(station, addresses));
-            }else{
+            } else {
                 stringFireStationMap.get(station).addAddress(address);
             }
         });
-     }
+    }
 
 
     @Override
@@ -59,34 +59,23 @@ public class InMemoryFireStationRepository implements FireStationRepository{
     }
 
     @Override
-    public ArrayList<FireStation> deleteFireStation(FireStationDto id) {
-        if(id.getAddress() != null) {
-            try{
+    public void deleteFireStation(FireStationDto id) {
+        if (id.getAddress() != null) {
             stringFireStationMap.entrySet().removeIf(e -> e.getValue().getAddresses().contains(id.getAddress()));
-            logger.info(id.getAddress() +  "is deleted");
+            logger.info(id.getAddress() + "is deleted");
             logger.info("now there is " + stringFireStationMap.size() + " Firestations");
-            return new ArrayList<>(stringFireStationMap.values());}
-            catch (Exception e){
-                logger.error("failed to add the Firestation", e);
-            }
+
         }
-        if(id.getStation() != null) {
-            try {
-                stringFireStationMap.entrySet().removeIf(e -> e.getValue().getStation().equals(id.getStation()));
-                logger.info(id.getStation() +  "is deleted");
-                logger.info("now there is " + stringFireStationMap.size() + " Firestations");
-            }catch(Exception e){
-                logger.error("failed to add the Firestation", e);
-            }
+        if (id.getStation() != null) {
+            stringFireStationMap.entrySet().removeIf(e -> e.getValue().getStation().equals(id.getStation()));
+            logger.info(id.getStation() + "is deleted");
+            logger.info("now there is " + stringFireStationMap.size() + " Firestations");
         }
-        return new ArrayList<>(stringFireStationMap.values());
     }
 
 
     @Override
     public FireStation save(FireStation fireStations) {
-            return stringFireStationMap.put(fireStations.getStation(),fireStations);
+        return stringFireStationMap.put(fireStations.getStation(), fireStations);
     }
-
-
 }

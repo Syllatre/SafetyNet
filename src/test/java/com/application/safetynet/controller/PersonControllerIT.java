@@ -32,14 +32,6 @@ public class PersonControllerIT {
         }
     }
 
-    @Test
-    public void getPersonsIT() throws Exception {
-        mockMvc.perform(get("/persons")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(23)));
-    }
 
     @Test
     public void addPersonIT() throws Exception {

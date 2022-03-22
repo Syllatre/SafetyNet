@@ -12,7 +12,7 @@ public interface PersonRepository {
 
     public List<Person> findAll();
 
-    public ArrayList<Person> delete(Person personDelete);
+    public void delete(Person personDelete);
 
     public List<Person> update(Person personUpdate);
 

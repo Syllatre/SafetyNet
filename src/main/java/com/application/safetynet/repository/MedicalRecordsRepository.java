@@ -1,19 +1,18 @@
 package com.application.safetynet.repository;
 
-import com.application.safetynet.model.MedicalRecords;
+import com.application.safetynet.model.MedicalRecord;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface MedicalRecordsRepository {
     void init() throws IOException;
 
-    public List<MedicalRecords> findAll();
+    public List<MedicalRecord> findAll();
 
-    public ArrayList<MedicalRecords> delete(MedicalRecords medicalRecordsDelete);
+    public void delete(MedicalRecord medicalRecordsDelete);
 
-    public List<MedicalRecords> update(MedicalRecords medicalRecordsUpdate);
+    public List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate);
 
-    public List<MedicalRecords> create(MedicalRecords medicalRecords);
+    public List<MedicalRecord> create(MedicalRecord medicalRecords);
 }

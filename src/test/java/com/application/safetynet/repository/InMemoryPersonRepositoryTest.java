@@ -1,11 +1,13 @@
 package com.application.safetynet.repository;
 
 
+import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -67,9 +69,10 @@ public class InMemoryPersonRepositoryTest {
         Person personDelete = new Person();
         personDelete.setFirstName("Zach");
         personDelete.setLastName("Zemicks");
-        List<Person> delete = inMemoryPersonRepository.delete(personDelete);
-        Assertions.assertEquals(delete.size(), 22);
-        Assertions.assertFalse(delete.stream().anyMatch(element -> element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks")));
+        inMemoryPersonRepository.delete(personDelete);
+        List<Person> refreshList = new ArrayList<>(inMemoryPersonRepository.findAll());
+        Assertions.assertEquals(refreshList.size(), 22);
+        Assertions.assertFalse(refreshList.stream().anyMatch(element -> element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks")));
     }
 
     @Test
@@ -78,8 +81,9 @@ public class InMemoryPersonRepositoryTest {
         Person personDelete = new Person();
         personDelete.setFirstName("");
         personDelete.setLastName("Zemicks");
-        List<Person> delete = inMemoryPersonRepository.delete(personDelete);
-        Assertions.assertEquals(delete.size(), 23);
+        inMemoryPersonRepository.delete(personDelete);
+        List<Person> refreshList = new ArrayList<>(inMemoryPersonRepository.findAll());
+        Assertions.assertEquals(refreshList.size(), 23);
     }
 }
 

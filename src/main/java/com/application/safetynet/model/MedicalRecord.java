@@ -3,37 +3,21 @@ package com.application.safetynet.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicalRecords {
+public class MedicalRecord {
     String firstName;
     String lastName;
     String birthdate;
-    String medications;
-    String allergies;
+    List<String> medications;
+    List<String> allergies;
 
-    public MedicalRecords(String firstName, String lastName, String birthdate, String medications,String allergies) {
+    public MedicalRecord(String firstName, String lastName, String birthdate, List<String> medications, List<String> allergies) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
         this.medications = medications;
         this.allergies = allergies;
     }
-    public MedicalRecords(){}
-
-    public String getMedications() {
-        return medications;
-    }
-
-    public void setMedications(String medications) {
-        this.medications = medications;
-    }
-
-    public String getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(String allergies) {
-        this.allergies = allergies;
-    }
+    public MedicalRecord(){}
 
     public String getFirstName() {
         return firstName;
@@ -59,14 +43,30 @@ public class MedicalRecords {
         this.birthdate = birthdate;
     }
 
+    public List<String> getMedications() {
+        return medications;
+    }
+
+    public void setMedications(List<String> medications) {
+        this.medications = medications;
+    }
+
+    public List<String> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(List<String> allergies) {
+        this.allergies = allergies;
+    }
+
     @Override
     public String toString() {
-        return "MedicalRecords{" +
+        return "MedicalRecord{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthdate='" + birthdate + '\'' +
-                ", medications='" + medications + '\'' +
-                ", allergies='" + allergies + '\'' +
+                ", medications=" + medications +
+                ", allergies=" + allergies +
                 '}';
     }
 }

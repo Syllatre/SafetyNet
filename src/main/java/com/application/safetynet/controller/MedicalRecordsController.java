@@ -1,6 +1,6 @@
 package com.application.safetynet.controller;
 
-import com.application.safetynet.model.MedicalRecords;
+import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.service.MedicalRecordsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,30 +18,25 @@ public class MedicalRecordsController {
     MedicalRecordsService medicalRecordsService;
 
 
-    @GetMapping("/medicalrecords")
-    List<MedicalRecords> getMedicalRecords() {
-        logger.info("All MedicalRecords http://localhost:8080/medicalrecords");
-        return medicalRecordsService.getMedicalRecords();
-    }
 
     @DeleteMapping("/medicalrecords")
-    public void deletePerson(@RequestBody MedicalRecords medicalRecordsDelete) {
+    public void deletePerson(@RequestBody MedicalRecord medicalRecordsDelete) {
         logger.info("DELETE http://localhost:8080/medicalrecords");
         logger.info("body: " + medicalRecordsDelete);
         medicalRecordsService.delete(medicalRecordsDelete);
     }
 
     @PostMapping("/medicalrecords")
-    public List<MedicalRecords> addMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
+    public List<MedicalRecord> addMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
         logger.info("POST http://localhost:8080/medicalrecords");
-        logger.info("body: " + medicalRecords);
-        return medicalRecordsService.createMedicalRecords(medicalRecords);
+        logger.info("body: " + medicalRecord);
+        return medicalRecordsService.createMedicalRecords(medicalRecord);
     }
 
     @PutMapping("/medicalrecords")
-    List<MedicalRecords> updateMedicalRecords(@RequestBody MedicalRecords medicalRecordsUpdate) {
+    List<MedicalRecord> updateMedicalRecords(@RequestBody MedicalRecord medicalRecordUpdate) {
         logger.info("PUT http://localhost:8080/medicalrecords");
-        logger.info("body: " + medicalRecordsUpdate);
-        return medicalRecordsService.update(medicalRecordsUpdate);
+        logger.info("body: " + medicalRecordUpdate);
+        return medicalRecordsService.update(medicalRecordUpdate);
     }
 }

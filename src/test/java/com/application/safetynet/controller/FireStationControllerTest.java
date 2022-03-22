@@ -1,7 +1,7 @@
 package com.application.safetynet.controller;
 
 import com.application.safetynet.model.FireStation;
-import com.application.safetynet.model.FireStationDto;
+import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.service.FireStationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.is;
@@ -56,20 +55,6 @@ class FireStationControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void getFireStations() throws Exception {
-        List<FireStation> fireStationList = new ArrayList<>();
-        fireStationList.add(fireStation);
-        ArrayList<String> addresses = new ArrayList<>();
-        addresses.add("rue des coucous");
-        fireStationList.add(new FireStation("2", addresses));
-
-        Mockito.when(fireStationService.getFireStations()).thenReturn(fireStationList);
-        mockMvc.perform(get("/firestations")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[1].station", is("2")));
-    }
 
     @Test
     void updateFireStationWithExistingStation() throws Exception {

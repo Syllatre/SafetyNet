@@ -1,7 +1,7 @@
 package com.application.safetynet.controller;
 
 import com.application.safetynet.model.FireStation;
-import com.application.safetynet.model.FireStationDto;
+import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.service.FireStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +30,6 @@ public class FireStationController {
         return fireStationService.saveFireStation(convertFireStationDto);
     }
 
-    @GetMapping("/firestations")
-    public List<FireStation> getFireStations() {
-        return fireStationService.getFireStations();
-    }
 
     @PutMapping("/firestation/{station}")
     public FireStation updateFireStation(@PathVariable("station") final String station, @RequestBody FireStationDto fireStationDto) {

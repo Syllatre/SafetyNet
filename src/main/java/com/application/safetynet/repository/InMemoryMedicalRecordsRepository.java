@@ -1,6 +1,6 @@
 package com.application.safetynet.repository;
 
-import com.application.safetynet.model.MedicalRecords;
+import com.application.safetynet.model.MedicalRecord;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import org.slf4j.Logger;
@@ -22,69 +22,76 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
 
     private static final Logger logger = LoggerFactory.getLogger(InMemoryMedicalRecordsRepository.class);
 
-    private final Map<String, MedicalRecords> stringMedicalRecordsMap = new HashMap<>();
+    private  final Map<String, MedicalRecord> stringMedicalRecordMap = new HashMap<>();
+
+
 
     @PostConstruct
     public void init() throws IOException {
         String content = null;
         try {
-            logger.info(" MedicalRecords data initialized");
             File file = ResourceUtils.getFile("classpath:data.json");
             content = Files.readString(file.toPath());
         } catch (IOException e) {
-            logger.error("failed to load MedicalRecords data", e);
         }
         Any medicalRecordsAny = JsonIterator.deserialize(content).get("medicalrecords", '*');
         medicalRecordsAny.forEach(element -> {
             String firstName = element.get("firstName").toString();
             String lastName = element.get("lastName").toString();
             String birthdate = element.get("birthdate").toString();
-            String medications = element.get("medications").toString();
-            String allergies = element.get("allergies").toString();
-            String id = firstName + " " + lastName;
-            stringMedicalRecordsMap.put(id, new MedicalRecords(firstName, lastName, birthdate, medications, allergies));
+            List<String> medications = new ArrayList<>();
+            List<String> allergies = new ArrayList<>();
+            String id = firstName+" "+lastName;
+            for(int nb = 0;nb<element.get("medications").size();nb++){
+                String medication = element.get("medications",nb).toString();
+                medications.add(medication);
+            }
+            for(int nb = 0;nb<element.get("allergies").size();nb++){
+                String allergie = element.get("allergies",nb).toString();
+                allergies.add(allergie);
+            }
+            stringMedicalRecordMap.put(id, new MedicalRecord(firstName, lastName, birthdate, medications,allergies));
         });
     }
 
     @Override
-    public List<MedicalRecords> findAll() {
-        return new ArrayList<>(stringMedicalRecordsMap.values());
+    public List<MedicalRecord> findAll() {
+        return new ArrayList<>(stringMedicalRecordMap.values());
     }
 
     @Override
-    public ArrayList<MedicalRecords> delete(MedicalRecords medicalRecordsDelete) {
-        boolean deleted = stringMedicalRecordsMap.values().removeIf(medicalRecords -> medicalRecordsDelete.getFirstName().equalsIgnoreCase(medicalRecords.getFirstName())
+    public void delete(MedicalRecord medicalRecordsDelete) {
+        boolean deleted = stringMedicalRecordMap.values().removeIf(medicalRecords -> medicalRecordsDelete.getFirstName().equalsIgnoreCase(medicalRecords.getFirstName())
                 && medicalRecordsDelete.getLastName().equalsIgnoreCase(medicalRecords.getLastName()));
         if (deleted) {
             logger.info(medicalRecordsDelete.getFirstName() + " " + medicalRecordsDelete.getLastName() + " is delete");
-            logger.info("now there is " + stringMedicalRecordsMap.size() + " persons");
+            logger.info("now there is " + stringMedicalRecordMap.size() + " persons");
         } else {
             logger.error("nobody knows as" + medicalRecordsDelete.getFirstName() + " " + medicalRecordsDelete.getLastName());
         }
-        return new ArrayList<>(stringMedicalRecordsMap.values());
     }
 
     @Override
-    public List<MedicalRecords> update(MedicalRecords medicalRecordsUpdate) {
-        for (MedicalRecords medicalRecords : stringMedicalRecordsMap.values()) {
+    public List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate) {
+        for (MedicalRecord medicalRecords : stringMedicalRecordMap.values()) {
             if (medicalRecords.getFirstName().equalsIgnoreCase(medicalRecordsUpdate.getFirstName())
                     && medicalRecords.getLastName().equalsIgnoreCase(medicalRecordsUpdate.getLastName())) ;
             medicalRecords.setBirthdate(medicalRecordsUpdate.getBirthdate());
             medicalRecords.setMedications(medicalRecordsUpdate.getMedications());
             medicalRecords.setAllergies(medicalRecordsUpdate.getAllergies());
         }
-        return new ArrayList<>(stringMedicalRecordsMap.values());
+        return new ArrayList<>(stringMedicalRecordMap.values());
     }
 
     @Override
-    public List<MedicalRecords> create(MedicalRecords medicalRecords) {
+    public List<MedicalRecord> create(MedicalRecord medicalRecords) {
         logger.info(medicalRecords.getFirstName() + " " + medicalRecords.getLastName());
         try {
-            stringMedicalRecordsMap.put(medicalRecords.getFirstName() + " " + medicalRecords.getLastName(), medicalRecords);
+            stringMedicalRecordMap.put(medicalRecords.getFirstName() + " " + medicalRecords.getLastName(), medicalRecords);
             logger.info(medicalRecords.getFirstName() + " " + medicalRecords.getLastName() + " is added");
         } catch (Exception e) {
             logger.error("failed to add the MedicalRecords", e);
         }
-        return new ArrayList<>(stringMedicalRecordsMap.values());
+        return new ArrayList<>(stringMedicalRecordMap.values());
     }
 }

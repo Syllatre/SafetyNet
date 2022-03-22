@@ -1,7 +1,7 @@
 package com.application.safetynet.controller;
 
 
-import com.application.safetynet.model.FireStationDto;
+import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.repository.InMemoryFireStationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;

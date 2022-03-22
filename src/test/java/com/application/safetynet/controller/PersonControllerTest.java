@@ -45,36 +45,12 @@ public class PersonControllerTest {
         person = new Person(firstName, lastName, address, city, zip, phone, email);
     }
 
-    @Test
-    void getPersonsTest() throws Exception {
-        String firstName = "Stephane";
-        String lastName = "Broni";
-        String address = "15 rue du lac";
-        String city = "Paris";
-        String zip = "75013";
-        String phone = "0153802975";
-        String email = "stephane@gmail.com";
-
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        personList.add(new Person(firstName, lastName, address, city, zip, phone, email));
-
-        Mockito.when(personService.getPersons()).thenReturn(personList);
-        mockMvc.perform(get("/persons")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].city", is("Nantes")))
-                .andExpect(jsonPath("$[1].city", is("Paris")));
-    }
 
     @Test
     void deletePerson() throws Exception {
         Person inputPerson = new Person();
         inputPerson.setFirstName("Emilie");
         inputPerson.setLastName("Petit");
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        when(personService.delete(inputPerson)).thenReturn(personList);
         mockMvc.perform(delete("/person")
                         .content(new ObjectMapper().writeValueAsString(inputPerson))
                         .contentType(MediaType.APPLICATION_JSON))

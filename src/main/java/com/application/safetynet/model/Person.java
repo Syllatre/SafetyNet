@@ -1,5 +1,6 @@
 package com.application.safetynet.model;
 
+import com.application.safetynet.model.dto.PersonDto;
 import org.jetbrains.annotations.NotNull;
 
 public class Person {
@@ -26,8 +27,6 @@ public class Person {
 
     public Person() {
     }
-
-    ;
 
 
     public String getFirstName() {
@@ -97,5 +96,8 @@ public class Person {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+    public PersonDto toPersonDto(){
+        return new PersonDto(getFirstName(),getLastName(),getAddress(),getPhone());
     }
 }

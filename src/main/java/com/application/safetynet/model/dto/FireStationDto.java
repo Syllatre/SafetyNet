@@ -1,4 +1,4 @@
-package com.application.safetynet.model;
+package com.application.safetynet.model.dto;
 
 public class FireStationDto {
     String station;

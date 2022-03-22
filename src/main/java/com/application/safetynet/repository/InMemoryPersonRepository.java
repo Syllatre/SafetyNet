@@ -54,7 +54,7 @@ public class InMemoryPersonRepository implements PersonRepository {
     }
 
     @Override
-    public ArrayList<Person> delete(Person personDelete) {
+    public void delete(Person personDelete) {
         boolean deleted = stringPersonMap.values().removeIf(person -> personDelete.getFirstName().equalsIgnoreCase(person.getFirstName())
                 && personDelete.getLastName().equalsIgnoreCase(person.getLastName()));
         if (deleted) {
@@ -63,7 +63,6 @@ public class InMemoryPersonRepository implements PersonRepository {
         } else {
             logger.error("nobody knows as" + personDelete.getFirstName() + " " + personDelete.getLastName());
         }
-        return new ArrayList<>(stringPersonMap.values());
     }
 
     @Override

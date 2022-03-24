@@ -2,24 +2,31 @@ package com.application.safetynet.model.dto;
 
 import java.util.List;
 
-public class PersonWithMedicalRecordAndAgeDto {
+public class FamilyByStation {
+    private String firstName;
     private String lastName;
     private String phone;
     private int age;
-    private String station;
     private List<String> medications;
     private List<String> allergies;
 
-    public PersonWithMedicalRecordAndAgeDto(String lastName, String phone, int age, String station, List<String> medications, List<String> allergies) {
+    public FamilyByStation(String firstName, String lastName, String phone, int age, List<String> medicaments, List<String> allergies) {
+        this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.age = age;
-        this.station = station;
-        this.medications = medications;
+        this.medications = medicaments;
         this.allergies = allergies;
     }
+    public FamilyByStation(){}
 
-    public PersonWithMedicalRecordAndAgeDto(){}
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
     public String getLastName() {
         return lastName;
@@ -45,14 +52,6 @@ public class PersonWithMedicalRecordAndAgeDto {
         this.age = age;
     }
 
-    public String getStation() {
-        return station;
-    }
-
-    public void setStation(String station) {
-        this.station = station;
-    }
-
     public List<String> getMedications() {
         return medications;
     }
@@ -71,11 +70,11 @@ public class PersonWithMedicalRecordAndAgeDto {
 
     @Override
     public String toString() {
-        return "PersonWithMedicalRecordAndAgeDto{" +
-                "lastName='" + lastName + '\'' +
+        return "FamilyByStation{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", age=" + age +
-                ", station=" + station +
                 ", medications=" + medications +
                 ", allergies=" + allergies +
                 '}';

@@ -51,16 +51,6 @@ public class FireStationControllerIT {
 
 
     @Test
-    public void getFireStationsIT() throws Exception {
-        mockMvc.perform(get("/firestations")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].station", is("1")))
-                .andExpect(jsonPath("$", hasSize(4)));
-    }
-
-    @Test
     public void addFireStationIT() throws Exception {
         FireStationDto fireStation = new FireStationDto("10", "address");
         mockMvc.perform(post("/firestation")

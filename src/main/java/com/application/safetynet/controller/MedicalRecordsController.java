@@ -21,22 +21,19 @@ public class MedicalRecordsController {
 
     @DeleteMapping("/medicalrecords")
     public void deletePerson(@RequestBody MedicalRecord medicalRecordsDelete) {
-        logger.info("DELETE http://localhost:8080/medicalrecords");
-        logger.info("body: " + medicalRecordsDelete);
+        logger.info("Deleting medical record {}", medicalRecordsDelete);
         medicalRecordsService.delete(medicalRecordsDelete);
     }
 
     @PostMapping("/medicalrecords")
     public List<MedicalRecord> addMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
-        logger.info("POST http://localhost:8080/medicalrecords");
-        logger.info("body: " + medicalRecord);
+        logger.info("Creating medical record {}", medicalRecord);
         return medicalRecordsService.createMedicalRecords(medicalRecord);
     }
 
     @PutMapping("/medicalrecords")
     List<MedicalRecord> updateMedicalRecords(@RequestBody MedicalRecord medicalRecordUpdate) {
-        logger.info("PUT http://localhost:8080/medicalrecords");
-        logger.info("body: " + medicalRecordUpdate);
+        logger.info("Updating medical record {}", medicalRecordUpdate);
         return medicalRecordsService.update(medicalRecordUpdate);
     }
 }

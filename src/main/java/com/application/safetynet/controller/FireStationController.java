@@ -21,8 +21,7 @@ public class FireStationController {
 
     @PostMapping("/firestation")
     public FireStation addFireStation(@RequestBody FireStationDto fireStationDto) {
-        logger.info("http://localhost:8080/firestation");
-        logger.info("Firestation: " + fireStationDto);
+        logger.info("Creating firestation {}",fireStationDto);
         List<String> address = new ArrayList<>();
 
         address.add(fireStationDto.getAddress());
@@ -33,8 +32,7 @@ public class FireStationController {
 
     @PutMapping("/firestation/{station}")
     public FireStation updateFireStation(@PathVariable("station") final String station, @RequestBody FireStationDto fireStationDto) {
-        logger.info("http://localhost:8080/firestation/" + station);
-        logger.info("station: " + station);
+        logger.info("Updating firestation {}",fireStationDto);
         Optional<FireStation> f = fireStationService.getFireStation(station);
         if (f.isPresent()) {
             FireStation currentFireStation = f.get();
@@ -58,12 +56,7 @@ public class FireStationController {
 
     @DeleteMapping("/firestation")
     public void deleteFireStation(@RequestBody FireStationDto id) {
-        logger.info("http://localhost:8080/firestation");
-        logger.info("body: " + id);
-        try {
-            fireStationService.deleteFireStations(id);
-        } catch (Exception e) {
-            logger.error("failed to delete the firestation. Exception error is: " + e);
-        }
+        logger.error("Deleting firestation {}", id);
+        fireStationService.deleteFireStations(id);
     }
 }

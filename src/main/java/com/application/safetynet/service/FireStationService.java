@@ -47,11 +47,14 @@ public class FireStationService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getStationByAddress (String address){
+    public String getStationByAddress (String address){
         List<FireStation> fireStationsList = fireStationRepository.findAll();
-        return fireStationsList
-                .stream()
-                .filter(station-> station.getAddresses().equals(address))
-                .map(station-> station.getStation()).collect(Collectors.toList());
+        String station = null;
+        for (FireStation fireStation : fireStationsList){
+            if (fireStation.getAddresses().contains(address)){
+                 station = fireStation.getStation();
+            }
+        }
+        return station;
     }
 }

@@ -1,10 +1,14 @@
 package com.application.safetynet.model.dto;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class PersonWithMedicalAndEmail {
 
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
     private String address;
     private String email;

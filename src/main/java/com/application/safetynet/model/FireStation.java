@@ -1,9 +1,12 @@
 package com.application.safetynet.model;
 
 
+import lombok.Builder;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 public class FireStation {
 
     public FireStation(String station, List<String> addresses) {

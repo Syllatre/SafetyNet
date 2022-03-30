@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 public class FireStationController {
-    private static Logger logger = LoggerFactory.getLogger(FireStationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FireStationController.class);
 
     @Autowired
     private FireStationService fireStationService;

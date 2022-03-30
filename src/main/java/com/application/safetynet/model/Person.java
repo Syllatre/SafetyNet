@@ -1,8 +1,10 @@
 package com.application.safetynet.model;
 
 import com.application.safetynet.model.dto.PersonDto;
+import lombok.Builder;
 import org.jetbrains.annotations.NotNull;
 
+@Builder
 public class Person {
     @NotNull
     private String firstName;

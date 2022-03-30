@@ -1,8 +1,14 @@
 package com.application.safetynet.model.dto;
 
+import lombok.Builder;
+import org.jetbrains.annotations.NotNull;
+
+@Builder
 public class ChildDto {
 
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
     private int age;
 
@@ -36,5 +42,14 @@ public class ChildDto {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "ChildDto{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

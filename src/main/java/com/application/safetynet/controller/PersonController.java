@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class PersonController {
@@ -38,7 +39,7 @@ public class PersonController {
 
     //http://localhost:8080/phoneAlert?firestation=<firestation_number>
     @GetMapping("/person/phone/station/{id}")
-    public Map<String,List<String>> getPersonPhoneByStation(@PathVariable final int id) throws IOException {
+    public Map<String,Set<String>> getPersonPhoneByStation(@PathVariable final int id) throws IOException {
         logger.info("List of phone by station number {}",id);
         return personService.getPersonPhoneByStation(id);
     }
@@ -64,7 +65,7 @@ public class PersonController {
     }
 
     @GetMapping("/person/email")
-    public List<String> getPersonEmail ()  {
+    public Set<String> getPersonEmail ()  {
         logger.info("List of email");
         return personService.getPersonEmail();
     }

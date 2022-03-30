@@ -17,10 +17,10 @@ import java.util.*;
 
 @Repository
 public class InMemoryFireStationRepository implements FireStationRepository {
-    private static Logger logger = LoggerFactory.getLogger(InMemoryFireStationRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(InMemoryFireStationRepository.class);
 
 
-    private Map<String, FireStation> stringFireStationMap = new HashMap<>();
+    private final Map<String, FireStation> stringFireStationMap = new HashMap<>();
 
     @PostConstruct
     public void init() throws IOException {
@@ -32,6 +32,7 @@ public class InMemoryFireStationRepository implements FireStationRepository {
         } catch (IOException e) {
             logger.error("failed to load firestation data", e);
         }
+        assert content != null;
         Any fireStationsAny = JsonIterator.deserialize(content).get("firestations", '*');
         fireStationsAny.forEach(element -> {
             String station = element.get("station").toString();

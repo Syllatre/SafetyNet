@@ -19,9 +19,9 @@ import java.util.Map;
 
 @Repository
 public class InMemoryPersonRepository implements PersonRepository {
-    private static Logger logger = LoggerFactory.getLogger(InMemoryPersonRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(InMemoryPersonRepository.class);
 
-    private Map<String, Person> stringPersonMap = new HashMap<>();
+    private final Map<String, Person> stringPersonMap = new HashMap<>();
 
 
     @PostConstruct
@@ -34,6 +34,7 @@ public class InMemoryPersonRepository implements PersonRepository {
         } catch (IOException e) {
             logger.error("failed to load person data", e);
         }
+        assert content != null;
         Any fireStationsAny = JsonIterator.deserialize(content).get("persons", '*');
         fireStationsAny.forEach(element -> {
             String firstName = element.get("firstName").toString();

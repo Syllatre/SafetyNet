@@ -2,6 +2,7 @@ package com.application.safetynet.controller;
 
 
 import com.application.safetynet.model.Person;
+import com.application.safetynet.model.dto.PersonWithMedicalAndEmail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -63,7 +68,7 @@ public class PersonControllerIT {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.PhoneAlert", hasSize(6)));
+                .andExpect(jsonPath("$.PhoneAlert", hasSize(4)));
     }
 
     @Test
@@ -72,11 +77,27 @@ public class PersonControllerIT {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].station", is("1")))
+                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].station", is(List.of("1"))))
                 .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].age", is(41)))
                 .andExpect(jsonPath("$.personWithMedicalRecordAndAge[1].medications[0]", is("noxidian:100mg")))
                 .andExpect(jsonPath("$.personWithMedicalRecordAndAge", hasSize(3)));
 
+    }
+
+    @Test
+    public void getFamilyByStationIT() throws Exception {
+        mockMvc.perform(get("/person/family/station/{id}", 1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getPersonWithMedicalAndEmailTest() throws Exception {
+        mockMvc.perform(get("/person/medicalrecord&email")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -85,7 +106,7 @@ public class PersonControllerIT {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(23)));
+                .andExpect(jsonPath("$.*", hasSize(15)));
     }
 
 

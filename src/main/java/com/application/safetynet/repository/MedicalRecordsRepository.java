@@ -8,11 +8,11 @@ import java.util.List;
 public interface MedicalRecordsRepository {
     void init() throws IOException;
 
-    public List<MedicalRecord> findAll();
+    List<MedicalRecord> findAll();
 
-    public void delete(MedicalRecord medicalRecordsDelete);
+    void delete(MedicalRecord medicalRecordsDelete);
 
-    public List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate);
+    List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate);
 
-    public List<MedicalRecord> create(MedicalRecord medicalRecords);
+    List<MedicalRecord> create(MedicalRecord medicalRecords);
 }

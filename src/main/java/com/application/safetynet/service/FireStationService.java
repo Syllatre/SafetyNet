@@ -3,7 +3,6 @@ package com.application.safetynet.service;
 import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.repository.FireStationRepository;
-import com.application.safetynet.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,6 @@ public class FireStationService {
 
     @Autowired
     FireStationRepository fireStationRepository;
-
-    @Autowired
-    PersonRepository personRepository;
-
 
 
     public Optional<FireStation> getFireStation(final String station) {
@@ -43,18 +38,15 @@ public class FireStationService {
         return fireStationsList
                 .stream().
                 filter(station -> Integer.parseInt(station.getStation()) == stationNumber)
-                .flatMap(station-> station.getAddresses().stream())
+                .flatMap(station -> station.getAddresses().stream())
                 .collect(Collectors.toList());
     }
 
-    public String getStationByAddress (String address){
+    public List<String> getStationByAddress(String address) {
         List<FireStation> fireStationsList = fireStationRepository.findAll();
-        String station = null;
-        for (FireStation fireStation : fireStationsList){
-            if (fireStation.getAddresses().contains(address)){
-                 station = fireStation.getStation();
-            }
-        }
-        return station;
+        return fireStationsList
+                .stream()
+                .filter(station -> station.getAddresses().contains(address))
+                .map(station -> station.getStation()).collect(Collectors.toList());
     }
 }

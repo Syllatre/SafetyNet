@@ -11,11 +11,11 @@ import java.util.Optional;
 public interface FireStationRepository {
     void init() throws IOException;
 
-    public List<FireStation> findAll();
+    List<FireStation> findAll();
 
-    public Optional<FireStation> findByStation(String station);
+    Optional<FireStation> findByStation(String station);
 
-    public void deleteFireStation(FireStationDto id);
+    void deleteFireStation(FireStationDto id);
 
-    public FireStation save(FireStation fireStations);
+    FireStation save(FireStation fireStations);
 }

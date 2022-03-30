@@ -32,8 +32,9 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
         try {
             File file = ResourceUtils.getFile("classpath:data.json");
             content = Files.readString(file.toPath());
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
+        assert content != null;
         Any medicalRecordsAny = JsonIterator.deserialize(content).get("medicalrecords", '*');
         medicalRecordsAny.forEach(element -> {
             String firstName = element.get("firstName").toString();
@@ -75,10 +76,11 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
     public List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate) {
         for (MedicalRecord medicalRecords : stringMedicalRecordMap.values()) {
             if (medicalRecords.getFirstName().equalsIgnoreCase(medicalRecordsUpdate.getFirstName())
-                    && medicalRecords.getLastName().equalsIgnoreCase(medicalRecordsUpdate.getLastName())) ;
+                    && medicalRecords.getLastName().equalsIgnoreCase(medicalRecordsUpdate.getLastName())) {
             medicalRecords.setBirthdate(medicalRecordsUpdate.getBirthdate());
             medicalRecords.setMedications(medicalRecordsUpdate.getMedications());
             medicalRecords.setAllergies(medicalRecordsUpdate.getAllergies());
+            }
         }
         return new ArrayList<>(stringMedicalRecordMap.values());
     }

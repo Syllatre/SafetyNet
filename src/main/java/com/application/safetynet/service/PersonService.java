@@ -1,9 +1,9 @@
 package com.application.safetynet.service;
 
 
-import com.application.safetynet.model.dto.*;
 import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
+import com.application.safetynet.model.dto.*;
 import com.application.safetynet.repository.MedicalRecordsRepository;
 import com.application.safetynet.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,16 +53,14 @@ public class PersonService {
     public List<Person> getPersonByStationAddress(int station) throws IOException {
         List<Person> personList = personRepository.findAll();
         List<String> addresses = fireStationService.getAddressByStationNumber(station);
-        List<Person> personListByAddress = personList.stream().filter(person -> addresses.contains(person.getAddress())).collect(Collectors.toList());
-        return personListByAddress;
+        return personList.stream().filter(person -> addresses.contains(person.getAddress())).collect(Collectors.toList());
     }
 
     public int ageCalculation(String birthdate) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate birthdate1 = LocalDate.parse(birthdate, dtf);
         LocalDate today = LocalDate.now();
-        int age = Period.between(birthdate1, today).getYears();
-        return age;
+        return Period.between(birthdate1, today).getYears();
     }
 
     public Map<String, Object> countAdultAndChild(int station) throws IOException {
@@ -91,11 +86,10 @@ public class PersonService {
         return adultAndChild;
     }
     public List<Person> getPersonByAddress (String address){
-        List<Person> getPersonByAddress =  personRepository.findAll()
+        return personRepository.findAll()
                 .stream()
                 .filter(e->e.getAddress().equals(address))
                 .collect(Collectors.toList());
-        return getPersonByAddress;
     }
 
 
@@ -115,7 +109,7 @@ public class PersonService {
                 child.add(childDto);
                 List <Person> memberFamily = getPersonByAddress.stream().filter(e->e.getLastName().equals(persons.getLastName())).collect(Collectors.toList());
                 memberFamily.forEach(e->{
-                    if(e.getFirstName() != persons.getFirstName())
+                    if(!Objects.equals(e.getFirstName(), persons.getFirstName()))
                     other.add(e);
                 });
             }
@@ -125,10 +119,13 @@ public class PersonService {
         return result;
 
     }
-    public Map<String,List<String>> getPersonPhoneByStation(int station) throws IOException {
-        Map<String,List<String>> result = new HashMap<>();
+    public Map<String,Set<String>> getPersonPhoneByStation(int station) throws IOException {
+        Map<String,Set<String>> result = new HashMap<>();
         List<Person> personByStationAddress = getPersonByStationAddress(station);
-        List<String> phone = personByStationAddress.stream().map(e-> e.getPhone()).collect(Collectors.toList());
+        Set<String> phone = new HashSet<>();
+        for (Person person : personByStationAddress){
+            phone.add(person.getPhone());
+        }
         result.put("PhoneAlert",phone);
         return result;
     }
@@ -136,7 +133,7 @@ public class PersonService {
     public Map<String, List<PersonWithMedicalRecordAndAgeDto>> getPersonAndMedicalRecordPerAddress(String address){
         Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
         List<Person> personByAddress = getPersonByAddress(address);
-        String stationByAddress = fireStationService.getStationByAddress(address);
+        List<String> stationByAddress = fireStationService.getStationByAddress(address);
         List<PersonWithMedicalRecordAndAgeDto> personWithMedicalRecordAndAgeDtos = new ArrayList<>();
         for (Person persons : personByAddress) {
             String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
@@ -156,7 +153,7 @@ public class PersonService {
         List<String> addresses =fireStationService.getAddressByStationNumber(station);
         Map<String, List<FamilyByStation>> result = new HashMap<>();
         Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
-        List<FamilyByStation> familyByStations = null;
+        List<FamilyByStation> familyByStations;
         for(String address : addresses){
             List<Person> personList = getPersonByAddress(address);
             familyByStations = new ArrayList<>();
@@ -173,9 +170,13 @@ public class PersonService {
         return result;
     }
 
-    public List<String> getPersonEmail(){
+    public Set<String> getPersonEmail(){
         List<Person> personList = personRepository.findAll();
-        return personList.stream().map(e->e.getEmail()).collect(Collectors.toList());
+        Set<String> email = new HashSet<>();
+        for(Person person : personList){
+            email.add(person.getEmail());
+        }
+        return email;
     }
 
     public Map <String,List<PersonWithMedicalAndEmail>> getPersonWithMedicalAndEmail(){

@@ -26,13 +26,13 @@ public class MedicalRecordsController {
     }
 
     @PostMapping("/medicalrecords")
-    public List<MedicalRecord> addMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
+    public MedicalRecord addMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
         logger.info("Creating medical record {}", medicalRecord);
         return medicalRecordsService.createMedicalRecords(medicalRecord);
     }
 
     @PutMapping("/medicalrecords")
-    List<MedicalRecord> updateMedicalRecords(@RequestBody MedicalRecord medicalRecordUpdate) {
+    MedicalRecord updateMedicalRecords(@RequestBody MedicalRecord medicalRecordUpdate) {
         logger.info("Updating medical record {}", medicalRecordUpdate);
         return medicalRecordsService.update(medicalRecordUpdate);
     }

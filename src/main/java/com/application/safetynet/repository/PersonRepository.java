@@ -13,7 +13,7 @@ public interface PersonRepository {
 
     void delete(Person personDelete);
 
-    List<Person> update(Person personUpdate);
+    Person update(Person personUpdate);
 
-    List<Person> create(Person person);
+    Person create(Person person);
 }

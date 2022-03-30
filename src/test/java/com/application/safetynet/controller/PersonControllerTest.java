@@ -3,13 +3,14 @@ package com.application.safetynet.controller;
 
 import com.application.safetynet.model.Person;
 import com.application.safetynet.model.dto.ChildDto;
+import com.application.safetynet.model.dto.FamilyByStation;
 import com.application.safetynet.model.dto.PersonDto;
+import com.application.safetynet.model.dto.PersonWithMedicalRecordAndAgeDto;
 import com.application.safetynet.service.PersonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,9 +50,16 @@ public class PersonControllerTest {
                                                                                                       PersonDto.builder().firstName("Lily").lastName("Cooper").address("489 Manchester St").phone("841-874-9845").build()),"personUnderEighteen",0,"personOverEighteen",3);
 
     static final Map<String, Object> getChildAndFamilyByAddress = Map.of("other",List.of(Person.builder().firstName("Warren").lastName("Zemicks").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-7512").email("ward@email.com").build(),
-            Person.builder().firstName("Sophia").lastName("Zemicks").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-9845").email("soph@email.com").build()),"child",List.of(ChildDto.builder().firstName("Zach").lastName("Zemicks").age(5).build()));
+                                                                                             Person.builder().firstName("Sophia").lastName("Zemicks").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-9845").email("soph@email.com").build()),"child",List.of(ChildDto.builder().firstName("Zach").lastName("Zemicks").age(5).build()));
 
     static final Map <String, Set<String>> phone = Map.of("PhoneAlert",Set.of("841-874-7784","841-874-7462","841-874-6512","841-874-8547"));
+
+    static final  Map<String, List<PersonWithMedicalRecordAndAgeDto>> getPersonAndMedicalRecordPerAddress = Map.of("personWithMedicalRecordAndAge",List.of(PersonWithMedicalRecordAndAgeDto.builder().lastName("Peters").phone("841-874-8888").age(56).station(List.of("3")).medications(List.of()).allergies(List.of()).build(),
+                                                                                                                                                               PersonWithMedicalRecordAndAgeDto.builder().lastName("Boyd").phone("841-874-9888").age(57).station(List.of("3")).medications(List.of("aznol:350mg")).allergies(List.of("nillacilan")).build()));
+
+    static final Map<String,List<FamilyByStation>> getFamilyByStation =
+            Map.of("748 Townings Dr",List.of(),"834 Binoc Ave",List.of(),"112 Steppes Pl",List.of(FamilyByStation.builder().firstName("Ron").lastName("Peters").phone("841-874-8888").age(56).medications(List.of()).allergies(List.of()).build(),
+                                                                                                             FamilyByStation.builder().firstName("Allison").lastName("Boyd").phone("841-874-9888").age(57).medications(List.of("aznol:350mg")).allergies(List.of("nillacilan")).build()));
 
     @BeforeEach
     void setUp() {
@@ -79,9 +87,7 @@ public class PersonControllerTest {
 
     @Test
     void addPerson() throws Exception {
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        when(personService.createPerson(person)).thenReturn(personList);
+        when(personService.createPerson(person)).thenReturn(person);
         mockMvc.perform(post("/person")
                         .content(new ObjectMapper().writeValueAsString(person))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -90,9 +96,7 @@ public class PersonControllerTest {
 
     @Test
     void updatePerson() throws Exception {
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        when(personService.update(person)).thenReturn(personList);
+        when(personService.update(person)).thenReturn(person);
         mockMvc.perform(put("/person")
                         .content(new ObjectMapper().writeValueAsString(person))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -123,13 +127,6 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.child[0].age", is(5)));
     }
 
-//    //http://localhost:8080/phoneAlert?firestation=<firestation_number>
-//    @GetMapping("/person/phone/station/{id}")
-//    public Map<String, Set<String>> getPersonPhoneByStation(@PathVariable final int id) throws IOException {
-//        logger.info("List of phone by station number {}",id);
-//        return personService.getPersonPhoneByStation(id);
-//    }
-
     @Test
     void getPersonPhoneByStationTest() throws Exception {
         when(personService.getPersonPhoneByStation(1)).thenReturn(phone);
@@ -138,6 +135,29 @@ public class PersonControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.PhoneAlert", hasSize(4)));
-
     }
+
+    @Test
+    void getPersonAndMedicalRecordPerAddressTest() throws Exception {
+        when(personService.getPersonAndMedicalRecordPerAddress("112 Steppes Pl")).thenReturn(getPersonAndMedicalRecordPerAddress);
+        mockMvc.perform(get("/person/medicalrecord/{address}", "112 Steppes Pl")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.personWithMedicalRecordAndAge", hasSize(2)))
+                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].lastName", is("Peters")))
+                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[1].lastName", is("Boyd")));
+    }
+
+
+    @Test
+    void getFamilyByStationTest() throws Exception {
+        when(personService.getFamilyByStation(3)).thenReturn(getFamilyByStation);
+        mockMvc.perform(get("/person/family/station/{id}", 3)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
 }

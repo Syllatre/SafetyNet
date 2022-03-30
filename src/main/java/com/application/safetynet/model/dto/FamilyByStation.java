@@ -1,7 +1,9 @@
 package com.application.safetynet.model.dto;
 
-import java.util.List;
+import lombok.Builder;
 
+import java.util.List;
+@Builder
 public class FamilyByStation {
     private String firstName;
     private String lastName;

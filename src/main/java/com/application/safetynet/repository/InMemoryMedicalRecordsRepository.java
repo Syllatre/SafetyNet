@@ -73,7 +73,7 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
     }
 
     @Override
-    public List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate) {
+    public  MedicalRecord update(MedicalRecord medicalRecordsUpdate) {
         for (MedicalRecord medicalRecords : stringMedicalRecordMap.values()) {
             if (medicalRecords.getFirstName().equalsIgnoreCase(medicalRecordsUpdate.getFirstName())
                     && medicalRecords.getLastName().equalsIgnoreCase(medicalRecordsUpdate.getLastName())) {
@@ -82,11 +82,11 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
             medicalRecords.setAllergies(medicalRecordsUpdate.getAllergies());
             }
         }
-        return new ArrayList<>(stringMedicalRecordMap.values());
+        return medicalRecordsUpdate;
     }
 
     @Override
-    public List<MedicalRecord> create(MedicalRecord medicalRecords) {
+    public MedicalRecord create(MedicalRecord medicalRecords) {
         logger.info(medicalRecords.getFirstName() + " " + medicalRecords.getLastName());
         try {
             stringMedicalRecordMap.put(medicalRecords.getFirstName() + " " + medicalRecords.getLastName(), medicalRecords);
@@ -94,6 +94,6 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
         } catch (Exception e) {
             logger.error("failed to add the MedicalRecords", e);
         }
-        return new ArrayList<>(stringMedicalRecordMap.values());
+        return medicalRecords;
     }
 }

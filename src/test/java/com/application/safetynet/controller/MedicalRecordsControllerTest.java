@@ -60,9 +60,7 @@ public class MedicalRecordsControllerTest {
 
     @Test
     void addMedicalRecords() throws Exception {
-        List<MedicalRecord> medicalRecordsList = new ArrayList<>();
-        medicalRecordsList.add(medicalRecord);
-        when(medicalRecordsService.createMedicalRecords(medicalRecord)).thenReturn(medicalRecordsList);
+        when(medicalRecordsService.createMedicalRecords(medicalRecord)).thenReturn(medicalRecord);
         mockMvc.perform(post("/medicalrecords")
                         .content(new ObjectMapper().writeValueAsString(medicalRecord))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -71,9 +69,7 @@ public class MedicalRecordsControllerTest {
 
     @Test
     void updatePerson() throws Exception {
-        List<MedicalRecord> medicalRecordsList = new ArrayList<>();
-        medicalRecordsList.add(medicalRecord);
-        when(medicalRecordsService.update(medicalRecord)).thenReturn(medicalRecordsList);
+        when(medicalRecordsService.update(medicalRecord)).thenReturn(medicalRecord);
         mockMvc.perform(put("/medicalrecords")
                         .content(new ObjectMapper().writeValueAsString(medicalRecord))
                         .contentType(MediaType.APPLICATION_JSON)

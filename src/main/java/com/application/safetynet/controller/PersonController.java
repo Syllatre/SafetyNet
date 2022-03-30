@@ -77,13 +77,13 @@ public class PersonController {
     }
 
     @PostMapping("/person")
-    public List<Person> addPerson(@RequestBody Person person) {
+    public Person addPerson(@RequestBody Person person) {
         logger.info("Creating person{}",person);
         return personService.createPerson(person);
     }
 
     @PutMapping("/person")
-    List<Person> updatePerson(@RequestBody Person personUpdate) {
+        Person updatePerson(@RequestBody Person personUpdate) {
         logger.info("Updating person {}", personUpdate);
         return personService.update(personUpdate);
     }

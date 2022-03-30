@@ -35,9 +35,10 @@ public class InMemoryPersonRepositoryTest {
         updatePerson.setEmail("aimen@gmail.com");
         updatePerson.setPhone("0465874525");
         updatePerson.setZip("75013");
-        List<Person> personList = inMemoryPersonRepository.update(updatePerson);
-        Assertions.assertEquals(personList.size(), 23);
-        Assertions.assertTrue(personList.stream().anyMatch(element -> element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks") && element.getPhone().equals("0465874525")));
+        Person person = inMemoryPersonRepository.update(updatePerson);
+        List<Person> result = inMemoryPersonRepository.findAll();
+        Assertions.assertEquals(result.size(), 23);
+        Assertions.assertTrue(result.stream().anyMatch(element -> element.getFirstName().equals("Zach") && element.getLastName().equals("Zemicks") && element.getPhone().equals("0465874525")));
     }
 
     @Test
@@ -59,8 +60,9 @@ public class InMemoryPersonRepositoryTest {
         createPerson.setEmail("aimen@gmail.com");
         createPerson.setPhone("0465874525");
         createPerson.setZip("75013");
-        List<Person> personList = inMemoryPersonRepository.create(createPerson);
-        Assertions.assertTrue(personList.stream().anyMatch(element -> element.getFirstName().equals("Aimen") && element.getLastName().equals("Jerbi") && element.getPhone().equals("0465874525")));
+        Person person = inMemoryPersonRepository.create(createPerson);
+        List<Person> result = inMemoryPersonRepository.findAll();
+        Assertions.assertTrue(result.stream().anyMatch(element -> element.getFirstName().equals("Aimen") && element.getLastName().equals("Jerbi") && element.getPhone().equals("0465874525")));
     }
 
     @Test

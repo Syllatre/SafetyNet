@@ -67,7 +67,7 @@ public class InMemoryPersonRepository implements PersonRepository {
     }
 
     @Override
-    public List<Person> update(Person personUpdate) {
+    public Person update(Person personUpdate) {
         for (Person person : stringPersonMap.values()) {
             if (personUpdate.getFirstName().equalsIgnoreCase(person.getFirstName())
                     && personUpdate.getFirstName().equalsIgnoreCase(person.getFirstName())) {
@@ -78,11 +78,11 @@ public class InMemoryPersonRepository implements PersonRepository {
                 person.setZip(personUpdate.getZip());
             }
         }
-        return new ArrayList<>(stringPersonMap.values());
+        return personUpdate;
     }
 
     @Override
-    public List<Person> create(Person person) {
+    public Person create(Person person) {
         logger.info(person.getFirstName() + " " + person.getLastName());
         try {
             stringPersonMap.put(person.getFirstName() + " " + person.getLastName(), person);
@@ -90,6 +90,6 @@ public class InMemoryPersonRepository implements PersonRepository {
         } catch (Exception e) {
             logger.error("failed to add the person", e);
         }
-        return new ArrayList<>(stringPersonMap.values());
+        return person;
     }
 }

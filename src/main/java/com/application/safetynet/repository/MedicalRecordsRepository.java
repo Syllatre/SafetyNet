@@ -12,7 +12,7 @@ public interface MedicalRecordsRepository {
 
     void delete(MedicalRecord medicalRecordsDelete);
 
-    List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate);
+    MedicalRecord update(MedicalRecord medicalRecordsUpdate);
 
-    List<MedicalRecord> create(MedicalRecord medicalRecords);
+    MedicalRecord create(MedicalRecord medicalRecords);
 }

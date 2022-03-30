@@ -13,7 +13,7 @@ public class MedicalRecordsService {
     MedicalRecordsRepository medicalRecordsRepository;
 
 
-    public List<MedicalRecord> createMedicalRecords(MedicalRecord medicalRecord) {
+    public MedicalRecord createMedicalRecords(MedicalRecord medicalRecord) {
         return medicalRecordsRepository.create(medicalRecord);
     }
 
@@ -21,7 +21,7 @@ public class MedicalRecordsService {
          medicalRecordsRepository.delete(medicalRecordsDelete);
     }
 
-    public List<MedicalRecord> update(MedicalRecord medicalRecordsUpdate) {
+    public MedicalRecord update(MedicalRecord medicalRecordsUpdate) {
         return medicalRecordsRepository.update(medicalRecordsUpdate);
     }
 }

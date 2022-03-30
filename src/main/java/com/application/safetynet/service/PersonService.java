@@ -29,7 +29,7 @@ public class PersonService {
     MedicalRecordsRepository medicalRecordsRepository;
 
 
-    public List<Person> createPerson(Person person) {
+    public Person createPerson(Person person) {
         return personRepository.create(person);
     }
 
@@ -37,7 +37,7 @@ public class PersonService {
         personRepository.delete(personDelete);
     }
 
-    public List<Person> update(Person personUpdate) {
+    public Person update(Person personUpdate) {
         return personRepository.update(personUpdate);
     }
 

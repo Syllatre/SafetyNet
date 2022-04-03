@@ -81,4 +81,13 @@ public class FireStationControllerIT {
                 .andExpect(status().isOk());
 
     }
+
+    @Test
+    public void getAdultAndChildInStationIT() throws Exception {
+        mockMvc.perform(get("/firestation?stationNumber=2", 2)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
 }

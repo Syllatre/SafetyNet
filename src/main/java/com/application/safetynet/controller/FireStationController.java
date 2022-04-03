@@ -1,6 +1,7 @@
 package com.application.safetynet.controller;
 
 import com.application.safetynet.model.FireStation;
+import com.application.safetynet.model.dto.CountChildAndAdult;
 import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.service.FireStationService;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,13 @@ public class FireStationController {
 
     @Autowired
     private FireStationService fireStationService;
+
+    //http://localhost:8080/firestation?stationNumber=<station_number>
+    @GetMapping("/firestation")
+    public CountChildAndAdult getAdultAndChildInStation(@RequestParam(name = "stationNumber")  int id) throws IOException {
+        logger.info("List of child and adult in station{}",id);
+        return fireStationService.countAdultAndChild(id);
+    }
 
     @PostMapping("/firestation")
     public FireStation addFireStation(@RequestBody FireStationDto fireStationDto) {

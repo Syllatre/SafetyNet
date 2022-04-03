@@ -29,6 +29,7 @@ public class PersonService {
     MedicalRecordsRepository medicalRecordsRepository;
 
 
+
     public Person createPerson(Person person) {
         return personRepository.create(person);
     }
@@ -41,66 +42,17 @@ public class PersonService {
         return personRepository.update(personUpdate);
     }
 
-    public Map<String, MedicalRecord> stringMedicalRecordMap() {
-        List<MedicalRecord> medicalRecords = medicalRecordsRepository.findAll();
-        Map<String, MedicalRecord> stringMedicalRecordMap = new HashMap<>();
-        for (MedicalRecord medicalRecord : medicalRecords) {
-            stringMedicalRecordMap.put(medicalRecord.getFirstName() + " " + medicalRecord.getLastName(), medicalRecord);
-        }
-        return stringMedicalRecordMap;
-    }
 
-    public List<Person> getPersonByStationAddress(int station) throws IOException {
-        List<Person> personList = personRepository.findAll();
-        List<String> addresses = fireStationService.getAddressByStationNumber(station);
-        return personList.stream().filter(person -> addresses.contains(person.getAddress())).collect(Collectors.toList());
-    }
 
-    public int ageCalculation(String birthdate) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate birthdate1 = LocalDate.parse(birthdate, dtf);
-        LocalDate today = LocalDate.now();
-        return Period.between(birthdate1, today).getYears();
-    }
 
-    public Map<String, Object> countAdultAndChild(int station) throws IOException {
+
+    public ChildAndFamilyByAddressDto getChildAndFamilyByAddress(String address) {
         Map<String, MedicalRecord> medicalRecordMap = stringMedicalRecordMap();
-        Map<String, Object> adultAndChild = new HashMap<>();
-        List<Person> getPersonByStationAddress = getPersonByStationAddress(station);
-        List<Person> adult = new ArrayList<>();
-        List<Person> child = new ArrayList<>();
-        for (Person persons : getPersonByStationAddress) {
-            String birthdate = medicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
-            int age = ageCalculation(birthdate);
-            if (age > 18) {
-                adult.add(persons);
-            } else {
-                child.add(persons);
-            }
-        }
-        List<PersonDto> personDto = getPersonByStationAddress.stream().map(Person::toPersonDto).collect(Collectors.toList());
-
-        adultAndChild.put("personOverEighteen", adult.size());
-        adultAndChild.put("personUnderEighteen", child.size());
-        adultAndChild.put("personByStationAddress", personDto);
-        return adultAndChild;
-    }
-    public List<Person> getPersonByAddress (String address){
-        return personRepository.findAll()
-                .stream()
-                .filter(e->e.getAddress().equals(address))
-                .collect(Collectors.toList());
-    }
-
-
-    public Map<String,Object> getChildAndFamilyByAddress(String address) {
-        Map<String, MedicalRecord> medicalRecordMap = stringMedicalRecordMap();
-        Map<String, Object> result = new HashMap<>();
-
-        List<Person> getPersonByAddress = getPersonByAddress(address);
-
+        List<Person> getPersonByAddress = fireStationService.getPersonByAddress(address);
         List<Person> other = new ArrayList<>();
         List<ChildDto> child = new ArrayList<>();
+        ChildAndFamilyByAddressDto result;
+
         for (Person persons : getPersonByAddress) {
             String birthdate = medicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
             int age = ageCalculation(birthdate);
@@ -114,14 +66,13 @@ public class PersonService {
                 });
             }
         }
-        result.put("other",other);
-        result.put("child", child);
+        result = new ChildAndFamilyByAddressDto(other,child);
         return result;
-
     }
+
     public Map<String,Set<String>> getPersonPhoneByStation(int station) throws IOException {
         Map<String,Set<String>> result = new HashMap<>();
-        List<Person> personByStationAddress = getPersonByStationAddress(station);
+        List<Person> personByStationAddress = fireStationService.getPersonByStationAddress(station);
         Set<String> phone = new HashSet<>();
         for (Person person : personByStationAddress){
             phone.add(person.getPhone());
@@ -131,13 +82,13 @@ public class PersonService {
     }
 
     public Map<String, List<PersonWithMedicalRecordAndAgeDto>> getPersonAndMedicalRecordPerAddress(String address){
-        Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
-        List<Person> personByAddress = getPersonByAddress(address);
+        Map<String,MedicalRecord> stringMedicalRecordMap = fireStationService.stringMedicalRecordMap();
+        List<Person> personByAddress = fireStationService.getPersonByAddress(address);
         List<String> stationByAddress = fireStationService.getStationByAddress(address);
         List<PersonWithMedicalRecordAndAgeDto> personWithMedicalRecordAndAgeDtos = new ArrayList<>();
         for (Person persons : personByAddress) {
             String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
-            int age = ageCalculation(birthdate);
+            int age = fireStationService.ageCalculation(birthdate);
             List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
             List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
             PersonWithMedicalRecordAndAgeDto personDto =
@@ -149,20 +100,20 @@ public class PersonService {
         return result;
     }
 
-    public Map<String, List<FamilyByStation>> getFamilyByStation(int station) throws IOException {
+    public Map<String, List<FamilyByStationDto>> getFamilyByStation(int station) throws IOException {
         List<String> addresses =fireStationService.getAddressByStationNumber(station);
-        Map<String, List<FamilyByStation>> result = new HashMap<>();
-        Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
-        List<FamilyByStation> familyByStations;
+        Map<String, List<FamilyByStationDto>> result = new HashMap<>();
+        Map<String,MedicalRecord> stringMedicalRecordMap = fireStationService.stringMedicalRecordMap();
+        List<FamilyByStationDto> familyByStations;
         for(String address : addresses){
-            List<Person> personList = getPersonByAddress(address);
+            List<Person> personList = fireStationService.getPersonByAddress(address);
             familyByStations = new ArrayList<>();
             for (Person persons : personList) {
                 String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
-                int age = ageCalculation(birthdate);
+                int age = fireStationService.ageCalculation(birthdate);
                 List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
                 List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
-                FamilyByStation personOfFamily = new FamilyByStation(persons.getFirstName(), persons.getLastName(), persons.getPhone(), age,medications,allergies);
+                FamilyByStationDto personOfFamily = new FamilyByStationDto(persons.getFirstName(), persons.getLastName(), persons.getPhone(), age,medications,allergies);
                 familyByStations.add(personOfFamily);
             }
             result.put(address,familyByStations);
@@ -179,20 +130,36 @@ public class PersonService {
         return email;
     }
 
-    public Map <String,List<PersonWithMedicalAndEmail>> getPersonWithMedicalAndEmail(){
+    public Map <String,List<PersonWithMedicalAndEmailDto>> getPersonWithMedicalAndEmail(){
         List<Person> personList = personRepository.findAll();
-        List<PersonWithMedicalAndEmail> personWithMedicalAndEmailList = new ArrayList<>();
-        Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
-        Map<String,List<PersonWithMedicalAndEmail>> result = new HashMap<>();
+        List<PersonWithMedicalAndEmailDto> personWithMedicalAndEmailList = new ArrayList<>();
+        Map<String,MedicalRecord> stringMedicalRecordMap = fireStationService.stringMedicalRecordMap();
+        Map<String,List<PersonWithMedicalAndEmailDto>> result = new HashMap<>();
         for(Person persons : personList){
             String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
             List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
             List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
-            int age = ageCalculation(birthdate);
-            PersonWithMedicalAndEmail person = new PersonWithMedicalAndEmail(persons.getFirstName(),persons.getLastName(), persons.getAddress(),persons.getEmail(),age,medications,allergies);
+            int age = fireStationService.ageCalculation(birthdate);
+            PersonWithMedicalAndEmailDto person = new PersonWithMedicalAndEmailDto(persons.getFirstName(),persons.getLastName(), persons.getAddress(),persons.getEmail(),age,medications,allergies);
             personWithMedicalAndEmailList.add(person);
         }
         result.put("personWithMedicalAndEmailList",personWithMedicalAndEmailList);
         return result;
+    }
+
+    public int ageCalculation(String birthdate) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate birthdate1 = LocalDate.parse(birthdate, dtf);
+        LocalDate today = LocalDate.now();
+        return Period.between(birthdate1, today).getYears();
+    }
+
+    public Map<String, MedicalRecord> stringMedicalRecordMap() {
+        List<MedicalRecord> medicalRecords = medicalRecordsRepository.findAll();
+        Map<String, MedicalRecord> stringMedicalRecordMap = new HashMap<>();
+        for (MedicalRecord medicalRecord : medicalRecords) {
+            stringMedicalRecordMap.put(medicalRecord.getFirstName() + " " + medicalRecord.getLastName(), medicalRecord);
+        }
+        return stringMedicalRecordMap;
     }
 }

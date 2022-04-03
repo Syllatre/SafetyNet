@@ -6,9 +6,8 @@ import org.jetbrains.annotations.NotNull;
 @Builder
 public class ChildDto {
 
-    @NotNull
+
     private String firstName;
-    @NotNull
     private String lastName;
     private int age;
 

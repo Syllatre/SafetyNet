@@ -6,9 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Builder
 public class Person {
-    @NotNull
     private String firstName;
-    @NotNull
     private String lastName;
     private String address;
     private String city;

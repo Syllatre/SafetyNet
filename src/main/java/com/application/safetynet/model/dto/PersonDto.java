@@ -20,6 +20,8 @@ public class PersonDto {
         this.phone = phone;
     }
 
+    public PersonDto(){}
+
     public String getFirstName() {
         return firstName;
     }

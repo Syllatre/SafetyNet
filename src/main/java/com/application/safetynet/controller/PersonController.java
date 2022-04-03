@@ -1,8 +1,9 @@
 package com.application.safetynet.controller;
 
 import com.application.safetynet.model.Person;
-import com.application.safetynet.model.dto.FamilyByStation;
-import com.application.safetynet.model.dto.PersonWithMedicalAndEmail;
+import com.application.safetynet.model.dto.ChildAndFamilyByAddressDto;
+import com.application.safetynet.model.dto.FamilyByStationDto;
+import com.application.safetynet.model.dto.PersonWithMedicalAndEmailDto;
 import com.application.safetynet.model.dto.PersonWithMedicalRecordAndAgeDto;
 import com.application.safetynet.service.PersonService;
 import org.slf4j.Logger;
@@ -22,17 +23,10 @@ public class PersonController {
     @Autowired
     PersonService personService;
 
-    //http://localhost:8080/firestation?stationNumber=<station_number>
-    @GetMapping("/person/{id}")
-    public Map<String,Object> getAdultAndChildInStation(@PathVariable final int id) throws IOException {
-        logger.info("List of child and adult in station{}",id);
-        return personService.countAdultAndChild(id);
-    }
-
     //http://localhost:8080/childAlert?address=<address>
-    @GetMapping("/person/family/{address}")
-    public Map<String, Object> getChildByAddressWithFamily(@PathVariable final String address){
-        logger.info("List of child and family by address {}",address);
+    @GetMapping("childAlert")
+    public ChildAndFamilyByAddressDto getChildByAddressWithFamily(@RequestParam(name="address") final String address){
+//        logger.info("List of child and family by address {}",address);
         return personService.getChildAndFamilyByAddress(address);
 
     }
@@ -53,13 +47,13 @@ public class PersonController {
 
     //http://localhost:8080/flood/stations?stations=<a list of station_numbers>
     @GetMapping("/person/family/station/{id}")
-    public Map<String,List<FamilyByStation>> getFamilyByStation(@PathVariable final int id) throws IOException {
+    public Map<String,List<FamilyByStationDto>> getFamilyByStation(@PathVariable final int id) throws IOException {
         logger.info("List of family by station number {}",id);
         return personService.getFamilyByStation(id);
     }
 
     @GetMapping("/person/medicalrecord&email")
-    public Map<String,List<PersonWithMedicalAndEmail>> getPersonWithMedicalAndEmail() {
+    public Map<String,List<PersonWithMedicalAndEmailDto>> getPersonWithMedicalAndEmail() {
         logger.info("List of persons with medical records, age and email");
         return personService.getPersonWithMedicalAndEmail();
     }

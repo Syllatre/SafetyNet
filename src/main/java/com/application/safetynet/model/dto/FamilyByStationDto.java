@@ -1,32 +1,26 @@
 package com.application.safetynet.model.dto;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.Builder;
 
 import java.util.List;
-
-public class PersonWithMedicalAndEmail {
-
-    @NotNull
+@Builder
+public class FamilyByStationDto {
     private String firstName;
-    @NotNull
     private String lastName;
-    private String address;
-    private String email;
+    private String phone;
     private int age;
     private List<String> medications;
     private List<String> allergies;
 
-    public PersonWithMedicalAndEmail(String firstName, String lastName, String address, String email, int age, List<String> medications, List<String> allergies) {
+    public FamilyByStationDto(String firstName, String lastName, String phone, int age, List<String> medicaments, List<String> allergies) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.address = address;
-        this.email = email;
+        this.phone = phone;
         this.age = age;
-        this.medications = medications;
+        this.medications = medicaments;
         this.allergies = allergies;
     }
-
-    public PersonWithMedicalAndEmail(){}
+    public FamilyByStationDto(){}
 
     public String getFirstName() {
         return firstName;
@@ -44,20 +38,12 @@ public class PersonWithMedicalAndEmail {
         this.lastName = lastName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public int getAge() {
@@ -86,15 +72,13 @@ public class PersonWithMedicalAndEmail {
 
     @Override
     public String toString() {
-        return "PersonWithMedicalAndEmail{" +
+        return "FamilyByStation{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 ", age=" + age +
                 ", medications=" + medications +
                 ", allergies=" + allergies +
                 '}';
     }
 }
-

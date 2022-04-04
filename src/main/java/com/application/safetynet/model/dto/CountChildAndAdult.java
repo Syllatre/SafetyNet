@@ -3,9 +3,9 @@ package com.application.safetynet.model.dto;
 import java.util.List;
 
 public class CountChildAndAdult {
-    List<PersonDto> personList;
-    int personUnderEighteen;
-    int personOverEighteen;
+    private List<PersonDto> personList;
+    private int personUnderEighteen;
+    private int personOverEighteen;
 
     public CountChildAndAdult(List<PersonDto> personList, int personUnderEighteen, int personOverEighteen) {
         this.personList = personList;

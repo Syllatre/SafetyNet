@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 public class PersonDto {
 
     @NotNull
-    String firstName;
+    private String firstName;
     @NotNull
-    String lastName;
-    String address;
-    String phone;
+    private String lastName;
+    private String address;
+    private String phone;
 
     public PersonDto(String firstName, String lastName, String address, String phone) {
         this.firstName = firstName;

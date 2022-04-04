@@ -51,7 +51,7 @@ public class PersonControllerIT {
 
     @Test
     public void getPersonPhoneByStationIT() throws Exception {
-        mockMvc.perform(get("/person/phone/station/{id}", 1)
+        mockMvc.perform(get("/phoneAlert?firestation=1", 1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -4,20 +4,20 @@ import lombok.Builder;
 import org.jetbrains.annotations.NotNull;
 
 @Builder
-public class ChildDto {
+public class FamilyMember {
 
 
     private String firstName;
     private String lastName;
     private int age;
 
-    public ChildDto(String firstName, String lastName, int age) {
+    public FamilyMember(String firstName, String lastName, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
     }
 
-    public ChildDto(){}
+    public FamilyMember(){}
 
     public String getFirstName() {
         return firstName;

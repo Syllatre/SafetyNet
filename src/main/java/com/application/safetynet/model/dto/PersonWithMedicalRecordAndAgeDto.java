@@ -8,9 +8,7 @@ import java.util.List;
 @Builder
 public class PersonWithMedicalRecordAndAgeDto {
 
-    @NotNull
     private String lastName;
-    @NotNull
     private String phone;
     private int age;
     private List<String> station;

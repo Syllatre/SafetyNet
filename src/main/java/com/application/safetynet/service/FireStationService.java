@@ -56,6 +56,22 @@ public class FireStationService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getAddressByStationNumberList(List<Integer> stationNumber) throws IOException {
+        List<FireStation> fireStationsList = fireStationRepository.findAll();
+        List<String> result = new ArrayList<>();
+        for (int element : stationNumber ){
+            List <String> addresses= fireStationsList
+                    .stream().
+                    filter(station -> Integer.parseInt(station.getStation()) == element)
+                    .flatMap(station -> station.getAddresses().stream())
+                    .collect(Collectors.toList());
+            for(String address : addresses){
+                result.add(address);
+            }
+        }
+        return result;
+    }
+
     public List<String> getStationByAddress(String address) {
         List<FireStation> fireStationsList = fireStationRepository.findAll();
         return fireStationsList

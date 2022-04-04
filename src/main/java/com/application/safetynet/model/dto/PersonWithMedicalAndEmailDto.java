@@ -6,9 +6,8 @@ import java.util.List;
 
 public class PersonWithMedicalAndEmailDto {
 
-    @NotNull
+
     private String firstName;
-    @NotNull
     private String lastName;
     private String address;
     private String email;

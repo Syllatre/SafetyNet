@@ -2,7 +2,6 @@
 //
 //
 //import com.application.safetynet.model.Person;
-//import com.application.safetynet.model.dto.ChildDto;
 //import com.application.safetynet.model.dto.FamilyByStationDto;
 //import com.application.safetynet.model.dto.PersonDto;
 //import com.application.safetynet.model.dto.PersonWithMedicalRecordAndAgeDto;
@@ -50,7 +49,7 @@
 //                                                                                                      PersonDto.builder().firstName("Lily").lastName("Cooper").address("489 Manchester St").phone("841-874-9845").build()),"personUnderEighteen",0,"personOverEighteen",3);
 //
 //    static final Map<String, Object> getChildAndFamilyByAddress = Map.of("other",List.of(Person.builder().firstName("Warren").lastName("Zemicks").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-7512").email("ward@email.com").build(),
-//                                                                                             Person.builder().firstName("Sophia").lastName("Zemicks").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-9845").email("soph@email.com").build()),"child",List.of(ChildDto.builder().firstName("Zach").lastName("Zemicks").age(5).build()));
+//                                                                                             Person.builder().firstName("Sophia").lastName("Zemicks").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-9845").email("soph@email.com").build()),"child",List.of(FamilyMember.builder().firstName("Zach").lastName("Zemicks").age(5).build()));
 //
 //    static final Map <String, Set<String>> phone = Map.of("PhoneAlert",Set.of("841-874-7784","841-874-7462","841-874-6512","841-874-8547"));
 //
@@ -103,50 +102,51 @@
 //                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isOk());
 //    }
-//
-//
-//    @Test
-//    void getChildByAddressWithFamilyTest() throws Exception {
-//        when(personService.getChildAndFamilyByAddress("892 Downing Ct")).thenReturn(getChildAndFamilyByAddress);
-//        mockMvc.perform(get("/person/family/{address}", "892 Downing Ct")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.other[0].firstName", is("Warren")))
-//                .andExpect(jsonPath("$.child[0].age", is(5)));
-//    }
-//
+////
+////
+////    @Test
+////    void getChildByAddressWithFamilyTest() throws Exception {
+////        when(personService.getChildAndFamilyByAddress("892 Downing Ct")).thenReturn(getChildAndFamilyByAddress);
+////        mockMvc.perform(get("/person/family/{address}", "892 Downing Ct")
+////                        .accept(MediaType.APPLICATION_JSON))
+////                .andDo(print())
+////                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$.other[0].firstName", is("Warren")))
+////                .andExpect(jsonPath("$.child[0].age", is(5)));
+////    }
+////
 //    @Test
 //    void getPersonPhoneByStationTest() throws Exception {
+//
 //        when(personService.getPersonPhoneByStation(1)).thenReturn(phone);
-//        mockMvc.perform(get("/person/phone/station/{id}", 1)
+//        mockMvc.perform(get("/phoneAlert?firestation=1",  1)
 //                        .accept(MediaType.APPLICATION_JSON))
 //                .andDo(print())
 //                .andExpect(status().isOk())
 //                .andExpect(jsonPath("$.PhoneAlert", hasSize(4)));
 //    }
-//
-//    @Test
-//    void getPersonAndMedicalRecordPerAddressTest() throws Exception {
-//        when(personService.getPersonAndMedicalRecordPerAddress("112 Steppes Pl")).thenReturn(getPersonAndMedicalRecordPerAddress);
-//        mockMvc.perform(get("/person/medicalrecord/{address}", "112 Steppes Pl")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.personWithMedicalRecordAndAge", hasSize(2)))
-//                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].lastName", is("Peters")))
-//                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[1].lastName", is("Boyd")));
-//    }
-//
-//
-//    @Test
-//    void getFamilyByStationTest() throws Exception {
-//        when(personService.getFamilyByStation(3)).thenReturn(getFamilyByStation);
-//        mockMvc.perform(get("/person/family/station/{id}", 3)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
-//
-//
+////
+////    @Test
+////    void getPersonAndMedicalRecordPerAddressTest() throws Exception {
+////        when(personService.getPersonAndMedicalRecordPerAddress("112 Steppes Pl")).thenReturn(getPersonAndMedicalRecordPerAddress);
+////        mockMvc.perform(get("/person/medicalrecord/{address}", "112 Steppes Pl")
+////                        .accept(MediaType.APPLICATION_JSON))
+////                .andDo(print())
+////                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$.personWithMedicalRecordAndAge", hasSize(2)))
+////                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].lastName", is("Peters")))
+////                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[1].lastName", is("Boyd")));
+////    }
+////
+////
+////    @Test
+////    void getFamilyByStationTest() throws Exception {
+////        when(personService.getFamilyByStation(3)).thenReturn(getFamilyByStation);
+////        mockMvc.perform(get("/person/family/station/{id}", 3)
+////                        .accept(MediaType.APPLICATION_JSON))
+////                .andDo(print())
+////                .andExpect(status().isOk());
+////    }
+////
+////
 //}

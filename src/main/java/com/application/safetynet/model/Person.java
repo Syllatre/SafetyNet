@@ -1,5 +1,6 @@
 package com.application.safetynet.model;
 
+import com.application.safetynet.model.dto.FamilyMember;
 import com.application.safetynet.model.dto.PersonDto;
 import lombok.Builder;
 import org.jetbrains.annotations.NotNull;
@@ -100,4 +101,5 @@ public class Person {
     public PersonDto toPersonDto(){
         return new PersonDto(getFirstName(),getLastName(),getAddress(),getPhone());
     }
+
 }

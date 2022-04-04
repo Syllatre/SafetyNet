@@ -4,6 +4,7 @@ import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
 import com.application.safetynet.model.dto.*;
+import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.MedicalRecordsRepository;
 import com.application.safetynet.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -29,6 +32,9 @@ public class PersonServiceTest {
 
     @Mock
     FireStationService fireStationService;
+
+    @Mock
+    FireStationRepository fireStationRepository;
 
     @Mock
     PersonRepository personRepository;
@@ -100,27 +106,42 @@ public class PersonServiceTest {
     void getChildAndFamilyByAddressTest() {
         when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
         when(fireStationService.getPersonByAddress("1509 Culver St")).thenReturn(getPersonByAddressList);
-        ChildAndFamilyByAddressDto childAndFamilyByAddressDto = personService.getChildAndFamilyByAddress("1509 Culver St");
+        ChildAlertDto childAndFamilyByAddressDto = personService.getChildAndFamilyByAddress("1509 Culver St");
         System.out.println(childAndFamilyByAddressDto);
         //TODO A FAIRE
 
 
     }
 //
-//    @Test
-//    void getPersonPhoneByStationTest() throws IOException {
-//        when(personRepository.findAll()).thenReturn(personList);
-//        when(personRepository.findAll()).thenReturn(personList);
-//        List<String> addresses = new ArrayList();
-//        addresses.add("834 Binoc Ave");
-//        addresses.add("748 Townings Dr");
-//        addresses.add("112 Steppes Pl");
-//        when(fireStationService.getAddressByStationNumber(3)).thenReturn(addresses);
-//        Map<String, Set<String>> getPersonPhoneByStation = personService.getPersonPhoneByStation(3);
-//        Set<String> phone = getPersonPhoneByStation.get("PhoneAlert");
-//        assertEquals(phone.size(), 2);
-//        //TODO verifier le contenu
-//    }
+    @Test
+    void getPersonPhoneByStationTest() throws IOException {
+        when(personRepository.findAll()).thenReturn(personList);
+        List<String> addresses = new ArrayList();
+        addresses.add("834 Binoc Ave");
+        addresses.add("748 Townings Dr");
+        addresses.add("112 Steppes Pl");
+        when(fireStationService.getAddressByStationNumber(3)).thenReturn(addresses);
+        Map<String, Set<String>> getPersonPhoneByStation = personService.getPersonPhoneByStation(3);
+        Set<String> phone = getPersonPhoneByStation.get("PhoneAlert");
+        assertEquals(phone.size(), 2);
+
+    }
+
+    @Test
+    void getPersonByStationAddressTest() throws IOException {
+        List<String> addresses = new ArrayList();
+        addresses.add("112 Steppes Pl");
+        addresses.add("489 Manchester St");
+        List<Integer> station = new ArrayList<>(4);
+        when(personRepository.findAll()).thenReturn(personList);
+        when(fireStationService.getAddressByStationNumberList(station)).thenReturn(addresses);
+        List<Person> result = personService.getPersonByStationAddress(4);
+        assertEquals(result.size(), 3);
+        assertTrue(result.stream().anyMatch(e -> e.getFirstName().equals("Lily")));
+        assertTrue(result.stream().anyMatch(e -> e.getFirstName().equals("Allison")));
+        assertTrue(result.stream().anyMatch(e -> e.getFirstName().equals("Ron")));
+        assertFalse(result.stream().anyMatch(e -> e.getFirstName().equals("Tenley")));
+    }
 //
 //    @Test
 //    void getPersonAndMedicalRecordPerAddressTest() throws IOException {

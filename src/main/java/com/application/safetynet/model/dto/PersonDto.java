@@ -1,14 +1,12 @@
 package com.application.safetynet.model.dto;
 
 import lombok.Builder;
-import org.jetbrains.annotations.NotNull;
 
 @Builder
 public class PersonDto {
 
-    @NotNull
+
     private String firstName;
-    @NotNull
     private String lastName;
     private String address;
     private String phone;
@@ -20,7 +18,8 @@ public class PersonDto {
         this.phone = phone;
     }
 
-    public PersonDto(){}
+    public PersonDto() {
+    }
 
     public String getFirstName() {
         return firstName;

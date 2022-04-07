@@ -14,8 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -79,15 +77,33 @@ public class FireStationControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
     }
 
     @Test
+    //http://localhost:8080/firestation?stationNumber=<station_number>
     public void getAdultAndChildInStationIT() throws Exception {
         mockMvc.perform(get("/firestation?stationNumber=2", 2)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    //http://localhost:8080/flood/stations?stations=<a list of station_numbers>
+    public void getFamilyByStationIT() throws Exception {
+        mockMvc.perform(get("/flood/stations?stations=1", 1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    //http://localhost:8080/fire?address=<address>
+    public void getPersonWithMedicalAndEmailTest() throws Exception {
+        mockMvc.perform(get("/fire?address=908 73rd St", "908 73rd St")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

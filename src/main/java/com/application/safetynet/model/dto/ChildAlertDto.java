@@ -1,23 +1,25 @@
 package com.application.safetynet.model.dto;
 
-import com.application.safetynet.model.Person;
+import lombok.Builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 public class ChildAlertDto {
     private String firstName;
     private String lastName;
     private int age;
-    private List<Person> familyMembers;
+    private List<FamilyMember> familyMembers;
 
-    public ChildAlertDto(String firstName, String lastName, int age, List<Person> familyMembers) {
+    public ChildAlertDto(String firstName, String lastName, int age, List<FamilyMember> familyMembers) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.familyMembers = familyMembers;
     }
-    public ChildAlertDto(){}
+
+    public ChildAlertDto() {
+    }
 
     public String getFirstName() {
         return firstName;
@@ -43,11 +45,11 @@ public class ChildAlertDto {
         this.age = age;
     }
 
-    public List<Person> getFamilyMembers() {
+    public List<FamilyMember> getFamilyMembers() {
         return familyMembers;
     }
 
-    public void setFamilyMembers(List<Person> familyMembers) {
+    public void setFamilyMembers(List<FamilyMember> familyMembers) {
         this.familyMembers = familyMembers;
     }
 

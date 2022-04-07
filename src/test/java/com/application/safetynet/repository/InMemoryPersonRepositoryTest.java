@@ -1,7 +1,6 @@
 package com.application.safetynet.repository;
 
 
-import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

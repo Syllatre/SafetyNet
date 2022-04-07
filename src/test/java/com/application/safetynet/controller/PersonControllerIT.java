@@ -2,7 +2,6 @@ package com.application.safetynet.controller;
 
 
 import com.application.safetynet.model.Person;
-import com.application.safetynet.model.dto.PersonWithMedicalAndEmailDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -38,62 +33,44 @@ public class PersonControllerIT {
         }
     }
 
-//    @Test
-//    public void getChildByAddressWithFamilyIT() throws Exception {
-//        mockMvc.perform(get("/childAlert?address=947 E. Rose Dr", "947 E. Rose Dr")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.other[0].firstName", is("Shawna")))
-//                .andExpect(jsonPath("$.other", hasSize(2)))
-//                .andExpect(jsonPath("$.child[0].age", is(8)));
-//    }
+    @Test
+    //http://localhost:8080/childAlert?address=<address>
+    public void getChildByAddressWithFamilyIT() throws Exception {
+        mockMvc.perform(get("/childAlert?address=947 E. Rose Dr", "947 E. Rose Dr")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", is("Kendrik")))
+                .andExpect(jsonPath("$.familyMembers", hasSize(2)));
+    }
 
     @Test
+    //http://localhost:8080/phoneAlert?firestation=<firestation_number>
     public void getPersonPhoneByStationIT() throws Exception {
         mockMvc.perform(get("/phoneAlert?firestation=1", 1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.PhoneAlert", hasSize(4)));
-    }
-
-    @Test
-    public void getPersonAndMedicalRecordPerAddressIT() throws Exception {
-        mockMvc.perform(get("/person/medicalrecord/{address}", "947 E. Rose Dr")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].station", is(List.of("1"))))
-                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[0].age", is(41)))
-                .andExpect(jsonPath("$.personWithMedicalRecordAndAge[1].medications[0]", is("noxidian:100mg")))
-                .andExpect(jsonPath("$.personWithMedicalRecordAndAge", hasSize(3)));
+                .andExpect(status().isOk());
 
     }
 
     @Test
-    public void getFamilyByStationIT() throws Exception {
-        mockMvc.perform(get("/person/family/station/{id}", 1)
+    //http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
+    public void getPersonWithMedicalAndEmailIT() throws Exception {
+        mockMvc.perform(get("/personInfo?firstName=John&lastName=Boyd", "John", "Boyd")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getPersonWithMedicalAndEmailTest() throws Exception {
-        mockMvc.perform(get("/person/medicalrecord&email")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
+    //http://localhost:8080/communityEmail?city=<city>
     public void getPersonEmailIT() throws Exception {
-        mockMvc.perform(get("/person/email")
+        mockMvc.perform(get("/communityEmail?city=Culver", "Culver")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(15)));
+                .andExpect(status().isOk());
     }
 
 

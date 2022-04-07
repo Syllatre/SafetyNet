@@ -1,7 +1,6 @@
 package com.application.safetynet.model.dto;
 
 import lombok.Builder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,7 +23,8 @@ public class PersonWithMedicalRecordAndAgeDto {
         this.allergies = allergies;
     }
 
-    public PersonWithMedicalRecordAndAgeDto(){}
+    public PersonWithMedicalRecordAndAgeDto() {
+    }
 
     public String getLastName() {
         return lastName;

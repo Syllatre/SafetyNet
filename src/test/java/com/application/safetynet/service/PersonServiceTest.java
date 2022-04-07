@@ -3,7 +3,10 @@ package com.application.safetynet.service;
 import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
-import com.application.safetynet.model.dto.*;
+import com.application.safetynet.model.dto.ChildAlertDto;
+import com.application.safetynet.model.dto.FamilyMember;
+import com.application.safetynet.model.dto.PersonEmail;
+import com.application.safetynet.model.dto.PhoneAlert;
 import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.MedicalRecordsRepository;
 import com.application.safetynet.repository.PersonRepository;
@@ -15,13 +18,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,13 +44,13 @@ public class PersonServiceTest {
     @InjectMocks
     PersonService personService;
 
-    private static final Map<String,MedicalRecord> medicalRecordMap =
-            Map.of("Jacob Boyd",MedicalRecord.builder().firstName("John").lastName("Boyd").birthdate("03/06/1984").allergies(List.of("nillacilan")).medications(List.of("aznol:350mg", "hydrapermazol:100mg")).build(),
+    private static final Map<String, MedicalRecord> medicalRecordMap =
+            Map.of("Jacob Boyd", MedicalRecord.builder().firstName("John").lastName("Boyd").birthdate("03/06/1984").allergies(List.of("nillacilan")).medications(List.of("aznol:350mg", "hydrapermazol:100mg")).build(),
                     "Tenley Boyd", MedicalRecord.builder().firstName("Tenley").lastName("Boyd").birthdate("03/06/2012").allergies(List.of("peanut")).medications(List.of()).build(),
-                    "Ron Peters",MedicalRecord.builder().firstName("Ron").lastName("Peters").birthdate("04/06/1965").allergies(List.of()).medications(List.of()).build(),
-                    "Lily Cooper",MedicalRecord.builder().firstName("Lily").lastName("Cooper").birthdate("03/06/1994").allergies(List.of("nillacilan")).medications(List.of()).build(),
-                    "Brian Stelzer",MedicalRecord.builder().firstName("Brian").lastName("Stelzer").birthdate("12/06/1975").allergies(List.of("nillacilan")).medications(List.of("ibupurin:200mg", "hydrapermazol:400mg")).build(),
-                    "Allisson Boyd",MedicalRecord.builder().firstName("Allison").lastName("Boyd").birthdate("03/15/1965").allergies(List.of("nillacilan")).medications(List.of("aznol:350mg")).build());
+                    "Ron Peters", MedicalRecord.builder().firstName("Ron").lastName("Peters").birthdate("04/06/1965").allergies(List.of()).medications(List.of()).build(),
+                    "Lily Cooper", MedicalRecord.builder().firstName("Lily").lastName("Cooper").birthdate("03/06/1994").allergies(List.of("nillacilan")).medications(List.of()).build(),
+                    "Brian Stelzer", MedicalRecord.builder().firstName("Brian").lastName("Stelzer").birthdate("12/06/1975").allergies(List.of("nillacilan")).medications(List.of("ibupurin:200mg", "hydrapermazol:400mg")).build(),
+                    "Allisson Boyd", MedicalRecord.builder().firstName("Allison").lastName("Boyd").birthdate("03/15/1965").allergies(List.of("nillacilan")).medications(List.of("aznol:350mg")).build());
 
 
     private static final List<MedicalRecord> medicalRecordList = List.of(MedicalRecord.builder().firstName("John").lastName("Boyd").birthdate("03/06/1984").allergies(List.of("nillacilan")).medications(List.of("aznol:350mg", "hydrapermazol:100mg")).build(),
@@ -67,7 +69,7 @@ public class PersonServiceTest {
             Person.builder().firstName("Brian").lastName("Stelzer").address("947 E. Rose Dr").city("Culver").zip("97451").phone("841-874-7784").email("bstel@email.com").build(),
             Person.builder().firstName("Allison").lastName("Boyd").address("112 Steppes Pl").city("Culver").zip("97451").phone("841-874-9888").email("aly@imail.com").build());
 
-    private static final List<Person> getPersonByAddressList =  List.of(Person.builder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build(),
+    private static final List<Person> getPersonByAddressList = List.of(Person.builder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build(),
             Person.builder().firstName("Jacob").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6513").email("drk@email.com").build(),
             Person.builder().firstName("Tenley").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("tenz@email.com").build());
 
@@ -80,39 +82,18 @@ public class PersonServiceTest {
     @BeforeEach
     void setUp() {
     }
-//    public ChildAndFamilyByAddressDto getChildAndFamilyByAddress(String address) {
-//        Map<String, MedicalRecord> medicalRecordMap = fireStationService.stringMedicalRecordMap();
-//        List<Person> getPersonByAddress = fireStationService.getPersonByAddress(address);
-//        List<Person> other = new ArrayList<>();
-//        List<ChildDto> child = new ArrayList<>();
-//        ChildAndFamilyByAddressDto result;
-//
-//        for (Person persons : getPersonByAddress) {
-//            String birthdate = medicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
-//            int age = fireStationService.ageCalculation(birthdate);
-//            if (age <= 18) {
-//                ChildDto childDto = new ChildDto(persons.getFirstName(), persons.getLastName(), age);
-//                child.add(childDto);
-//                List <Person> memberFamily = getPersonByAddress.stream().filter(e->e.getLastName().equals(persons.getLastName())).collect(Collectors.toList());
-//                memberFamily.forEach(e->{
-//                    if(!Objects.equals(e.getFirstName(), persons.getFirstName()))
-//                        other.add(e);
-//                });
-//            }
-//        }
-//        result = new ChildAndFamilyByAddressDto(other,child);
-//        return result;
+
     @Test
     void getChildAndFamilyByAddressTest() {
         when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
         when(fireStationService.getPersonByAddress("1509 Culver St")).thenReturn(getPersonByAddressList);
         ChildAlertDto childAndFamilyByAddressDto = personService.getChildAndFamilyByAddress("1509 Culver St");
         System.out.println(childAndFamilyByAddressDto);
-        //TODO A FAIRE
-
-
+        List<FamilyMember> familyMembers = childAndFamilyByAddressDto.getFamilyMembers();
+        assertEquals(childAndFamilyByAddressDto.getFirstName(), "Tenley");
+        assertEquals(familyMembers.size(), 2);
     }
-//
+
     @Test
     void getPersonPhoneByStationTest() throws IOException {
         when(personRepository.findAll()).thenReturn(personList);
@@ -121,10 +102,33 @@ public class PersonServiceTest {
         addresses.add("748 Townings Dr");
         addresses.add("112 Steppes Pl");
         when(fireStationService.getAddressByStationNumber(3)).thenReturn(addresses);
-        Map<String, Set<String>> getPersonPhoneByStation = personService.getPersonPhoneByStation(3);
-        Set<String> phone = getPersonPhoneByStation.get("PhoneAlert");
-        assertEquals(phone.size(), 2);
+        List<PhoneAlert> getPersonPhoneByStation = personService.getPersonPhoneByStation(3);
+        assertEquals(getPersonPhoneByStation.size(), 2);
 
+    }
+
+    @Test
+    void getPersonEmailTest() {
+        when(personRepository.findAll()).thenReturn(personList);
+        List<PersonEmail> getPersonEmail = personService.getPersonEmail("Culver");
+        assertEquals(getPersonEmail.size(), 7);
+        boolean emailPeter = false;
+        for (PersonEmail element : getPersonEmail) {
+            if (element.getEmail().equals("jpeter@email.com")) {
+                emailPeter = true;
+            }
+        }
+        assertTrue(emailPeter);
+        System.out.println(getPersonEmail);
+    }
+
+    @Test
+    void getPersonWithMedicalAndEmailTest() {
+        when(personRepository.findAll()).thenReturn(personList);
+        when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
+        List result = personService.getPersonWithMedicalAndEmail("John", "Boyd");
+        System.out.println(result);
+        assertEquals(result.size(), 4);
     }
 
     @Test
@@ -132,72 +136,16 @@ public class PersonServiceTest {
         List<String> addresses = new ArrayList();
         addresses.add("112 Steppes Pl");
         addresses.add("489 Manchester St");
-        List<Integer> station = new ArrayList<>(4);
         when(personRepository.findAll()).thenReturn(personList);
-        when(fireStationService.getAddressByStationNumberList(station)).thenReturn(addresses);
+        when(fireStationService.getAddressByStationNumber(4)).thenReturn(addresses);
         List<Person> result = personService.getPersonByStationAddress(4);
+        System.out.println(result);
         assertEquals(result.size(), 3);
         assertTrue(result.stream().anyMatch(e -> e.getFirstName().equals("Lily")));
         assertTrue(result.stream().anyMatch(e -> e.getFirstName().equals("Allison")));
         assertTrue(result.stream().anyMatch(e -> e.getFirstName().equals("Ron")));
         assertFalse(result.stream().anyMatch(e -> e.getFirstName().equals("Tenley")));
     }
-//
-//    @Test
-//    void getPersonAndMedicalRecordPerAddressTest() throws IOException {
-//        when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
-//        when(personRepository.findAll()).thenReturn(personList);
-//        when(fireStationService.getStationByAddress("112 Steppes Pl")).thenReturn(List.of("3"));
-//        Map<String, List<PersonWithMedicalRecordAndAgeDto>> getPersonAndMedicalRecordPerAddress = personService.getPersonAndMedicalRecordPerAddress("112 Steppes Pl");
-//        List<PersonWithMedicalRecordAndAgeDto> person = getPersonAndMedicalRecordPerAddress.get("personWithMedicalRecordAndAge");
-//        System.out.println(getPersonAndMedicalRecordPerAddress);
-//        assertEquals(person.size(), 2);
-//        assertEquals(person.get(0).getLastName(), "Peters");
-//        assertEquals(person.get(1).getLastName(), "Boyd");
-//    }
-//
-//    @Test
-//    void getFamilyByStationTest() throws IOException {
-//        List<String> addresses = new ArrayList();
-//        addresses.add("834 Binoc Ave");
-//        addresses.add("748 Townings Dr");
-//        addresses.add("112 Steppes Pl");
-//        when(fireStationService.getAddressByStationNumber(3)).thenReturn(addresses);
-//        when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
-//        when(personRepository.findAll()).thenReturn(personList);
-//        Map<String, List<FamilyByStationDto>> getFamilyByStation = personService.getFamilyByStation(3);
-//        System.out.println(getFamilyByStation);
-//        List<FamilyByStationDto> steppesPl = getFamilyByStation.get("112 Steppes Pl");
-//        List<FamilyByStationDto> towningsDr = getFamilyByStation.get("748 Townings Dr");
-//        List<FamilyByStationDto> binocAve = getFamilyByStation.get("834 Binoc Ave");
-//        assertEquals(steppesPl.size(), 2);
-//        assertEquals(steppesPl.get(0).getFirstName(), "Ron");
-//        assertEquals(steppesPl.get(1).getFirstName(), "Allison");
-//        assertEquals(towningsDr.size(), 0);
-//        assertEquals(binocAve.size(), 0);
-//    }
-//
-//    @Test
-//    void getPersonEmailTest() {
-//        when(personRepository.findAll()).thenReturn(personList);
-//        Set<String> getPersonEmail = personService.getPersonEmail();
-//        assertEquals(getPersonEmail.size(), 7);
-//        assertTrue(getPersonEmail.contains("jaboyd@email.com"));
-//        System.out.println(getPersonEmail);
-//    }
-//
-//    @Test
-//    void getPersonWithMedicalAndEmailTest() {
-//        when(personRepository.findAll()).thenReturn(personList);
-//        when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
-//        Map<String, List<PersonWithMedicalAndEmailDto>> getPersonWithMedicalAndEmail = personService.getPersonWithMedicalAndEmail();
-//        List<PersonWithMedicalAndEmailDto> person = getPersonWithMedicalAndEmail.get("personWithMedicalAndEmailList");
-//        assertEquals(person.size(), 7);
-//        assertEquals(person.get(0).getMedications(), List.of("aznol:350mg", "hydrapermazol:100mg"));
-//        assertEquals(person.get(1).getMedications(), List.of("pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"));
-//        assertEquals(person.get(6).getMedications(), List.of("aznol:350mg"));
-//        System.out.println(getPersonWithMedicalAndEmail);
-//    }
 
     @Test
     void stringMedicalRecordMapTest() {

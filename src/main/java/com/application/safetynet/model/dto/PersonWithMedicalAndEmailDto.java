@@ -1,7 +1,5 @@
 package com.application.safetynet.model.dto;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class PersonWithMedicalAndEmailDto {
@@ -25,7 +23,8 @@ public class PersonWithMedicalAndEmailDto {
         this.allergies = allergies;
     }
 
-    public PersonWithMedicalAndEmailDto(){}
+    public PersonWithMedicalAndEmailDto() {
+    }
 
     public String getFirstName() {
         return firstName;

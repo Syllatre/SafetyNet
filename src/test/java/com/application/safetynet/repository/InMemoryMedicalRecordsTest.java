@@ -24,14 +24,14 @@ public class InMemoryMedicalRecordsTest {
     @Test
     public void update() throws IOException {
         inMemoryMedicalRecordsRepository.init();
-        List<String>medication = new ArrayList<>();
+        List<String> medication = new ArrayList<>();
         medication.add("doliprane");
         List<String> allergies = new ArrayList<>();
         medication.add(" ");
-        MedicalRecord updateMedicalRecords = new MedicalRecord("Zach","Zemicks","03/06/2017",medication,allergies);
+        MedicalRecord updateMedicalRecords = new MedicalRecord("Zach", "Zemicks", "03/06/2017", medication, allergies);
 
-       MedicalRecord medicalRecords = inMemoryMedicalRecordsRepository.update(updateMedicalRecords);
-        assertEquals(medicalRecords.getBirthdate(),"03/06/2017");
+        MedicalRecord medicalRecords = inMemoryMedicalRecordsRepository.update(updateMedicalRecords);
+        assertEquals(medicalRecords.getBirthdate(), "03/06/2017");
     }
 
     @Test
@@ -45,13 +45,13 @@ public class InMemoryMedicalRecordsTest {
     @Test
     public void create() throws IOException {
         inMemoryMedicalRecordsRepository.init();
-        List<String>medications = new ArrayList<>();
+        List<String> medications = new ArrayList<>();
         medications.add("Ventoline");
         List<String> allergies = new ArrayList<>();
         allergies.contains("cat");
-        MedicalRecord createMedicalRecords = new MedicalRecord("Aimen","Jerbi","30/08/1981",medications,allergies);
+        MedicalRecord createMedicalRecords = new MedicalRecord("Aimen", "Jerbi", "30/08/1981", medications, allergies);
         MedicalRecord medicalRecord = inMemoryMedicalRecordsRepository.create(createMedicalRecords);
-        List<MedicalRecord> medicalRecordList= inMemoryMedicalRecordsRepository.findAll();
+        List<MedicalRecord> medicalRecordList = inMemoryMedicalRecordsRepository.findAll();
         assertTrue(medicalRecordList.stream().anyMatch(element -> element.getFirstName().equals("Aimen") && element.getLastName().equals("Jerbi") && element.getMedications().contains("Ventoline")));
     }
 

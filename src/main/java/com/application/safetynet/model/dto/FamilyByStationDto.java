@@ -3,6 +3,7 @@ package com.application.safetynet.model.dto;
 import lombok.Builder;
 
 import java.util.List;
+
 @Builder
 public class FamilyByStationDto {
     private String firstName;
@@ -20,7 +21,9 @@ public class FamilyByStationDto {
         this.medications = medicaments;
         this.allergies = allergies;
     }
-    public FamilyByStationDto(){}
+
+    public FamilyByStationDto() {
+    }
 
     public String getFirstName() {
         return firstName;

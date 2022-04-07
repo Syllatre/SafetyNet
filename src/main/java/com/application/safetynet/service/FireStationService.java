@@ -3,9 +3,7 @@ package com.application.safetynet.service;
 import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
-import com.application.safetynet.model.dto.CountChildAndAdult;
-import com.application.safetynet.model.dto.FireStationDto;
-import com.application.safetynet.model.dto.PersonDto;
+import com.application.safetynet.model.dto.*;
 import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.MedicalRecordsRepository;
 import com.application.safetynet.repository.PersonRepository;
@@ -128,5 +126,45 @@ public class FireStationService {
             stringMedicalRecordMap.put(medicalRecord.getFirstName() + " " + medicalRecord.getLastName(), medicalRecord);
         }
         return stringMedicalRecordMap;
+    }
+
+    public List<FloodDto> getFamilyByStation(List<Integer> station) throws IOException {
+        List<String> addresses = getAddressByStationNumberList(station);
+        List<FloodDto> result = new ArrayList<>();
+        Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
+        List<FamilyByStationDto> familyByStations;
+        for(String address : addresses){
+            List<Person> personList = getPersonByAddress(address);
+            familyByStations = new ArrayList<>();
+            FloodDto otherFamily = new FloodDto();
+            for (Person persons : personList) {
+                String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
+                int age = ageCalculation(birthdate);
+                List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
+                List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
+                FamilyByStationDto personOfFamily = new FamilyByStationDto(persons.getFirstName(), persons.getLastName(), persons.getPhone(), age,medications,allergies);
+                familyByStations.add(personOfFamily);
+            }
+            FloodDto floodDto = new FloodDto(address,familyByStations);
+            result.add(floodDto);
+        }
+        return result;
+    }
+
+    public List<PersonWithMedicalRecordAndAgeDto> getPersonAndMedicalRecordPerAddress(String address){
+        Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
+        List<Person> personByAddress = getPersonByAddress(address);
+        List<String> stationByAddress = getStationByAddress(address);
+        List<PersonWithMedicalRecordAndAgeDto> personWithMedicalRecordAndAgeDto = new ArrayList<>();
+        for (Person persons : personByAddress) {
+            String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
+            int age = ageCalculation(birthdate);
+            List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
+            List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
+            PersonWithMedicalRecordAndAgeDto personDto =
+                    new PersonWithMedicalRecordAndAgeDto(persons.getLastName(), persons.getPhone(), age,stationByAddress,medications,allergies);
+            personWithMedicalRecordAndAgeDto.add(personDto);
+        }
+        return personWithMedicalRecordAndAgeDto;
     }
 }

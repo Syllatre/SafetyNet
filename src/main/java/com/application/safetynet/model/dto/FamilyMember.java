@@ -1,7 +1,6 @@
 package com.application.safetynet.model.dto;
 
 import lombok.Builder;
-import org.jetbrains.annotations.NotNull;
 
 @Builder
 public class FamilyMember {
@@ -17,7 +16,8 @@ public class FamilyMember {
         this.age = age;
     }
 
-    public FamilyMember(){}
+    public FamilyMember() {
+    }
 
     public String getFirstName() {
         return firstName;

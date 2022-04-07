@@ -49,14 +49,21 @@ public class PersonService {
     public ChildAlertDto getChildAndFamilyByAddress(String address) {
         Map<String, MedicalRecord> medicalRecordMap = stringMedicalRecordMap();
         List<Person> getPersonByAddress = fireStationService.getPersonByAddress(address);
+        List<FamilyMember> familyMembersList = new ArrayList<>();
+        for(Person person : getPersonByAddress){
+            String birthdate = medicalRecordMap.get(person.getFirstName() + " " + person.getLastName()).getBirthdate();
+            int age = ageCalculation(birthdate);
+            FamilyMember familyMember = new FamilyMember(person.getFirstName(), person.getLastName(), age);
+            familyMembersList.add(familyMember);
+        }
         ChildAlertDto childAlertDto=null;
         for (Person persons : getPersonByAddress) {
             String birthdate = medicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
             int age = ageCalculation(birthdate);
 
             if (age <= 18) {
-                List <Person> memberFamily = new ArrayList<>();
-                List <Person> memberFamilyTemp = getPersonByAddress.stream().filter(e->e.getLastName().equals(persons.getLastName())).collect(Collectors.toList());
+                List <FamilyMember> memberFamily = new ArrayList<>();
+                List <FamilyMember> memberFamilyTemp = familyMembersList.stream().filter(e->e.getLastName().equals(persons.getLastName())).collect(Collectors.toList());
                 memberFamilyTemp.forEach(e->{
                     if(!e.getFirstName().equals(persons.getFirstName()))
                     memberFamily.add(e);
@@ -69,72 +76,40 @@ public class PersonService {
         return childAlertDto;
     }
 
-    public Map<String,Set<String>> getPersonPhoneByStation(int station) throws IOException {
-        Map<String,Set<String>> result = new HashMap<>();
+    public List<PhoneAlert> getPersonPhoneByStation(int station) throws IOException {
         List<Person> personByStationAddress = getPersonByStationAddress(station);
         Set<String> phone = new HashSet<>();
+        List<PhoneAlert> phoneResult = new ArrayList<>();
         for (Person person : personByStationAddress){
             phone.add(person.getPhone());
         }
-        result.put("PhoneAlert",phone);
-        return result;
-    }
-
-    public Map<String, List<PersonWithMedicalRecordAndAgeDto>> getPersonAndMedicalRecordPerAddress(String address){
-        Map<String,MedicalRecord> stringMedicalRecordMap = fireStationService.stringMedicalRecordMap();
-        List<Person> personByAddress = fireStationService.getPersonByAddress(address);
-        List<String> stationByAddress = fireStationService.getStationByAddress(address);
-        List<PersonWithMedicalRecordAndAgeDto> personWithMedicalRecordAndAgeDtos = new ArrayList<>();
-        for (Person persons : personByAddress) {
-            String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
-            int age = fireStationService.ageCalculation(birthdate);
-            List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
-            List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
-            PersonWithMedicalRecordAndAgeDto personDto =
-                    new PersonWithMedicalRecordAndAgeDto(persons.getLastName(), persons.getPhone(), age,stationByAddress,medications,allergies);
-            personWithMedicalRecordAndAgeDtos.add(personDto);
+        for(String element : phone){
+            PhoneAlert phoneAlert = new PhoneAlert(element);
+            phoneResult.add(phoneAlert);
         }
-        Map<String, List<PersonWithMedicalRecordAndAgeDto>> result =new HashMap<>();
-        result.put("personWithMedicalRecordAndAge",personWithMedicalRecordAndAgeDtos);
-        return result;
+        return phoneResult;
     }
 
-    public Map<String, List<FamilyByStationDto>> getFamilyByStation(List<Integer> station) throws IOException {
-        List<String> addresses =fireStationService.getAddressByStationNumberList(station);
-        Map<String, List<FamilyByStationDto>> result = new HashMap<>();
-        Map<String,MedicalRecord> stringMedicalRecordMap = fireStationService.stringMedicalRecordMap();
-        List<FamilyByStationDto> familyByStations;
-        for(String address : addresses){
-            List<Person> personList = fireStationService.getPersonByAddress(address);
-            familyByStations = new ArrayList<>();
-            for (Person persons : personList) {
-                String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
-                int age = fireStationService.ageCalculation(birthdate);
-                List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
-                List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
-                FamilyByStationDto personOfFamily = new FamilyByStationDto(persons.getFirstName(), persons.getLastName(), persons.getPhone(), age,medications,allergies);
-                familyByStations.add(personOfFamily);
-            }
-            result.put(address,familyByStations);
-        }
-        return result;
-    }
-
-    public Set<String> getPersonEmail(String city){
+    public List<PersonEmail> getPersonEmail(String city){
         List<Person> personList = personRepository.findAll();
         Set<String> email = new HashSet<>();
+        List<PersonEmail> emailResult = new ArrayList<>();
         for(Person person : personList){
             if(person.getCity().equals(city)){
                 email.add(person.getEmail());
             }
         }
-        return email;
+        for(String element : email){
+            PersonEmail personEmail = new PersonEmail(element);
+            emailResult.add(personEmail);
+        }
+        return emailResult;
     }
 
     public List<PersonWithMedicalAndEmailDto> getPersonWithMedicalAndEmail(String firstName, String lastName){
         List<Person> personList = personRepository.findAll();
         List<PersonWithMedicalAndEmailDto> personWithMedicalAndEmailList = new ArrayList<>();
-        Map<String,MedicalRecord> stringMedicalRecordMap = fireStationService.stringMedicalRecordMap();
+        Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
         for(Person persons : personList){
             String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
             List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
@@ -143,7 +118,7 @@ public class PersonService {
             PersonWithMedicalAndEmailDto person = new PersonWithMedicalAndEmailDto(persons.getFirstName(),persons.getLastName(), persons.getAddress(),persons.getEmail(),age,medications,allergies);
             personWithMedicalAndEmailList.add(person);
         }
-        List<PersonWithMedicalAndEmailDto> person =personWithMedicalAndEmailList.stream().filter(e-> e.getFirstName().equals(firstName)&& e.getLastName().equals(lastName)).collect(Collectors.toList());
+        List<PersonWithMedicalAndEmailDto> person =personWithMedicalAndEmailList.stream().filter(e-> e.getLastName().equals(lastName)).collect(Collectors.toList());
         return person;
     }
 

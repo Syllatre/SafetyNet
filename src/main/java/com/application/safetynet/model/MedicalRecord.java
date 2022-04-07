@@ -2,16 +2,15 @@ package com.application.safetynet.model;
 
 import lombok.Builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 public class MedicalRecord {
-    String firstName;
-    String lastName;
-    String birthdate;
-    List<String> medications;
-    List<String> allergies;
+    private String firstName;
+    private String lastName;
+    private String birthdate;
+    private List<String> medications;
+    private List<String> allergies;
 
     public MedicalRecord(String firstName, String lastName, String birthdate, List<String> medications, List<String> allergies) {
         this.firstName = firstName;
@@ -20,7 +19,9 @@ public class MedicalRecord {
         this.medications = medications;
         this.allergies = allergies;
     }
-    public MedicalRecord(){}
+
+    public MedicalRecord() {
+    }
 
     public String getFirstName() {
         return firstName;

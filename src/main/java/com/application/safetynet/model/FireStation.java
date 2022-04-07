@@ -8,6 +8,8 @@ import java.util.List;
 
 @Builder
 public class FireStation {
+    private String station;
+    private List<String> addresses;
 
     public FireStation(String station, List<String> addresses) {
         this.station = station;
@@ -16,11 +18,6 @@ public class FireStation {
 
     public FireStation() {
     }
-
-    private String station;
-
-
-    private List<String> addresses;
 
 
     public String getStation() {

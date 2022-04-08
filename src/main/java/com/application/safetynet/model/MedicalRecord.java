@@ -2,12 +2,17 @@ package com.application.safetynet.model;
 
 import lombok.Builder;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.util.List;
 
 @Builder
 public class MedicalRecord {
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
+    @Past
     private String birthdate;
     private List<String> medications;
     private List<String> allergies;

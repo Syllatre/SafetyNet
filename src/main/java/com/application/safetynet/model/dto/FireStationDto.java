@@ -1,6 +1,8 @@
 package com.application.safetynet.model.dto;
 
+
 public class FireStationDto {
+
     private String station;
     private String address;
 

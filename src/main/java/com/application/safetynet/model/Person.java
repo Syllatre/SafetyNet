@@ -2,15 +2,25 @@ package com.application.safetynet.model;
 
 import com.application.safetynet.model.dto.PersonDto;
 import lombok.Builder;
+import org.jetbrains.annotations.NotNull;
+
+import javax.validation.constraints.Email;
 
 @Builder
 public class Person {
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
+    @NotNull
     private String address;
+    @NotNull
     private String city;
+    @NotNull
     private String zip;
+
     private String phone;
+    @Email
     private String email;
 
 

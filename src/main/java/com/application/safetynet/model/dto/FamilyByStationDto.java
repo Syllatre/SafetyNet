@@ -1,6 +1,7 @@
 package com.application.safetynet.model.dto;
 
 import lombok.Builder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 

@@ -3,11 +3,14 @@ package com.application.safetynet.model;
 
 import lombok.Builder;
 
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 public class FireStation {
+
+    @Size(min = 1, max = 4)
     private String station;
     private List<String> addresses;
 

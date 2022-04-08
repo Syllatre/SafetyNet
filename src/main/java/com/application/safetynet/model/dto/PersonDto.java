@@ -2,13 +2,18 @@ package com.application.safetynet.model.dto;
 
 import lombok.Builder;
 
+import javax.validation.constraints.NotNull;
+
 @Builder
 public class PersonDto {
 
-
+   @NotNull
     private String firstName;
+   @NotNull
     private String lastName;
+   @NotNull
     private String address;
+
     private String phone;
 
     public PersonDto(String firstName, String lastName, String address, String phone) {

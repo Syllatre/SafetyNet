@@ -6,7 +6,6 @@ import java.util.List;
 
 @Builder
 public class PersonWithMedicalRecordAndAgeDto {
-
     private String lastName;
     private String phone;
     private int age;

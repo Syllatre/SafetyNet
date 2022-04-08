@@ -1,7 +1,10 @@
 package com.application.safetynet.controller;
 
 import com.application.safetynet.model.FireStation;
+import com.application.safetynet.model.Person;
 import com.application.safetynet.model.dto.*;
+import com.application.safetynet.repository.FireStationRepository;
+import com.application.safetynet.repository.PersonRepository;
 import com.application.safetynet.service.FireStationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +39,12 @@ class FireStationControllerTest {
     @MockBean
     private FireStationService fireStationService;
 
+    @MockBean
+    private FireStationRepository fireStationRepository;
+
+    @MockBean
+    private PersonRepository personRepository;
+
     private FireStation fireStation;
 
     @BeforeEach
@@ -56,6 +65,19 @@ class FireStationControllerTest {
             List.of(PersonWithMedicalRecordAndAgeDto.builder().lastName("Cooper").phone("841-874-6874").age(28).station(List.of("3", "4")).medications(List.of("hydrapermazol:300mg", "dodoxadin:30mg")).allergies(List.of("shellfish")).build(),
                     PersonWithMedicalRecordAndAgeDto.builder().lastName("Peters").phone("841-874-8888").age(56).station(List.of("3", "4")).medications(List.of()).allergies(List.of()).build(),
                     PersonWithMedicalRecordAndAgeDto.builder().lastName("Boyd").phone("841-874-9888").age(57).station(List.of("3", "4")).medications(List.of("aznol:200mg")).allergies(List.of("nillacilan")).build());
+
+    private static final List<FireStation> fireStationList = List.of(FireStation.builder().station("1").addresses(List.of("908 73rd St", "947 E. Rose Dr", "644 Gershwin Cir")).build(),
+            FireStation.builder().station("2").addresses(List.of("29 15th St", "892 Downing Ct", "951 LoneTree Rd")).build(),
+            FireStation.builder().station("3").addresses(List.of("834 Binoc Ave", "748 Townings Dr", "112 Steppes Pl", "1509 Culver St")).build(),
+            FireStation.builder().station("4").addresses(List.of("112 Steppes Pl", "489 Manchester St")).build());
+
+    private static final List<Person> personList = List.of(Person.builder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build(),
+            Person.builder().firstName("Jacob").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6513").email("drk@email.com").build(),
+            Person.builder().firstName("Tenley").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("tenz@email.com").build(),
+            Person.builder().firstName("Ron").lastName("Peters").address("112 Steppes Pl").city("Culver").zip("97451").phone("841-874-8888").email("jpeter@email.com").build(),
+            Person.builder().firstName("Lily").lastName("Cooper").address("489 Manchester St").city("Culver").zip("97451").phone("841-874-9845").email("lily@email.com").build(),
+            Person.builder().firstName("Brian").lastName("Stelzer").address("947 E. Rose Dr").city("Culver").zip("97451").phone("841-874-7784").email("bstel@email.com").build(),
+            Person.builder().firstName("Allison").lastName("Boyd").address("112 Steppes Pl").city("Culver").zip("97451").phone("841-874-9888").email("aly@imail.com").build());
 
     @Test
     void addFireStation() throws Exception {
@@ -146,6 +168,7 @@ class FireStationControllerTest {
         personDtoList.add(personDto5);
         countChildAndAdult = new CountChildAndAdult(personDtoList, 1, 4);
         when(fireStationService.countAdultAndChild(2)).thenReturn(countChildAndAdult);
+        when(fireStationRepository.findAll()).thenReturn(fireStationList);
         mockMvc.perform(get("/firestation?stationNumber=2", 2)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -156,6 +179,7 @@ class FireStationControllerTest {
         //http://localhost:8080/fire?address=<address>
     void getPersonAndMedicalRecordPerAddressTest() throws Exception {
         when(fireStationService.getPersonAndMedicalRecordPerAddress("112 Steppes Pl")).thenReturn(getPersonAndMedicalRecordPerAddress);
+        when(personRepository.findAll()).thenReturn(personList);
         mockMvc.perform(get("/fire?address=112 Steppes Pl", "112 Steppes Pl")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -172,6 +196,7 @@ class FireStationControllerTest {
         List<Integer> station = new ArrayList<>();
         station.add(3);
         when(fireStationService.getFamilyByStation(station)).thenReturn(getFamilyByStation);
+        when(fireStationRepository.findAll()).thenReturn(fireStationList);
         mockMvc.perform(get("/flood/stations?stations=3", 3)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

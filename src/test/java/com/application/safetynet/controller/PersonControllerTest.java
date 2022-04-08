@@ -1,11 +1,14 @@
 package com.application.safetynet.controller;
 
 
+import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.Person;
 import com.application.safetynet.model.dto.ChildAlertDto;
 import com.application.safetynet.model.dto.FamilyMember;
 import com.application.safetynet.model.dto.PersonDto;
 import com.application.safetynet.model.dto.PhoneAlert;
+import com.application.safetynet.repository.FireStationRepository;
+import com.application.safetynet.repository.PersonRepository;
 import com.application.safetynet.service.PersonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +42,12 @@ public class PersonControllerTest {
     @MockBean
     PersonService personService;
 
+    @MockBean
+    PersonRepository personRepository;
+
+    @MockBean
+    FireStationRepository fireStationRepository;
+
     private Person person;
 
     static final Map<String, Object> countAdultAndChild = Map.of("personByStationAddress", List.of(PersonDto.builder().firstName("Ron").lastName("Peters").address("112 Steppes Pl").phone("841-874-8888").build(),
@@ -48,6 +57,19 @@ public class PersonControllerTest {
             PhoneAlert.builder().phone("841-874-7462").build(),
             PhoneAlert.builder().phone("841-874-6512").build(),
             PhoneAlert.builder().phone("841-874-8547").build());
+
+    private static final List<Person> personList = List.of(Person.builder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build(),
+            Person.builder().firstName("Jacob").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6513").email("drk@email.com").build(),
+            Person.builder().firstName("Tenley").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("tenz@email.com").build(),
+            Person.builder().firstName("Ron").lastName("Peters").address("112 Steppes Pl").city("Culver").zip("97451").phone("841-874-8888").email("jpeter@email.com").build(),
+            Person.builder().firstName("Lily").lastName("Cooper").address("489 Manchester St").city("Culver").zip("97451").phone("841-874-9845").email("lily@email.com").build(),
+            Person.builder().firstName("Brian").lastName("Stelzer").address("892 Downing Ct").city("Culver").zip("97451").phone("841-874-7784").email("bstel@email.com").build(),
+            Person.builder().firstName("Allison").lastName("Boyd").address("112 Steppes Pl").city("Culver").zip("97451").phone("841-874-9888").email("aly@imail.com").build());
+
+    private static final List<FireStation> fireStationList = List.of(FireStation.builder().station("1").addresses(List.of("908 73rd St", "947 E. Rose Dr", "644 Gershwin Cir")).build(),
+            FireStation.builder().station("2").addresses(List.of("29 15th St", "892 Downing Ct", "951 LoneTree Rd")).build(),
+            FireStation.builder().station("3").addresses(List.of("834 Binoc Ave", "748 Townings Dr", "112 Steppes Pl", "1509 Culver St")).build(),
+            FireStation.builder().station("4").addresses(List.of("112 Steppes Pl", "489 Manchester St")).build());
 
 
     @BeforeEach
@@ -99,6 +121,7 @@ public class PersonControllerTest {
         ChildAlertDto getChildAndFamilyByAddress = ChildAlertDto.builder().firstName("Zach").lastName("Zemicks").age(5).familyMembers(List.of(FamilyMember.builder().firstName("Warren").lastName("Zemicks").age(40).build(),
                 FamilyMember.builder().firstName("Sophia").lastName("Zemicks").age(30).build())).build();
         when(personService.getChildAndFamilyByAddress("892 Downing Ct")).thenReturn(getChildAndFamilyByAddress);
+        when(personRepository.findAll()).thenReturn(personList);
         mockMvc.perform(get("/childAlert?address=892 Downing Ct", "892 Downing Ct")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -111,6 +134,7 @@ public class PersonControllerTest {
         // http://localhost:8080/phoneAlert?firestation=<firestation_number>
     void getPersonPhoneByStationTest() throws Exception {
         when(personService.getPersonPhoneByStation(1)).thenReturn(phone);
+        when(fireStationRepository.findAll()).thenReturn(fireStationList);
         mockMvc.perform(get("/phoneAlert?firestation=1", 1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

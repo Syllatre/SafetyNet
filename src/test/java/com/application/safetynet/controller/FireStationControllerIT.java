@@ -27,6 +27,7 @@ public class FireStationControllerIT {
     @Autowired
     InMemoryFireStationRepository inMemoryFireStationRepository;
 
+
     @Autowired
     public MockMvc mockMvc;
 

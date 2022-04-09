@@ -54,10 +54,6 @@ public class InMemoryPersonRepository implements PersonRepository {
         return new ArrayList<>(stringPersonMap.values());
     }
 
-    @Override
-    public boolean findByCity(String city) {
-        return findAll().stream().anyMatch(element -> element.getCity().equalsIgnoreCase(city));
-    }
 
     @Override
     public void delete(Person personDelete) {

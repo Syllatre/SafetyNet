@@ -88,7 +88,7 @@ public class PersonController {
     //http://localhost:8080/communityEmail?city=<city>
     @GetMapping("communityEmail")
     public List<PersonEmailDto> getPersonEmail(@RequestParam(name = "city") String city) throws CityNotExistException {
-        boolean cityExist = personRepository.findByCity(city);
+        boolean cityExist = personRepository.findAll().stream().anyMatch(element -> element.getCity().equalsIgnoreCase(city));
         if (!cityExist) throw new CityNotExistException("La ville"+city+" que vous avez saisie n'existe pas dans notre base de donnée");
         logger.debug("List of email");
         return personService.getPersonEmail(city);

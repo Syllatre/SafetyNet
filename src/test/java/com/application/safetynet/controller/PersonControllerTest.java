@@ -3,10 +3,7 @@ package com.application.safetynet.controller;
 
 import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.Person;
-import com.application.safetynet.model.dto.ChildAlertDto;
-import com.application.safetynet.model.dto.FamilyMember;
-import com.application.safetynet.model.dto.PersonDto;
-import com.application.safetynet.model.dto.PhoneAlert;
+import com.application.safetynet.model.dto.*;
 import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.PersonRepository;
 import com.application.safetynet.service.PersonService;
@@ -53,10 +50,10 @@ public class PersonControllerTest {
     static final Map<String, Object> countAdultAndChild = Map.of("personByStationAddress", List.of(PersonDto.builder().firstName("Ron").lastName("Peters").address("112 Steppes Pl").phone("841-874-8888").build(),
             PersonDto.builder().firstName("Lily").lastName("Cooper").address("489 Manchester St").phone("841-874-9845").build()), "personUnderEighteen", 0, "personOverEighteen", 3);
 
-    static final List<PhoneAlert> phone = List.of(PhoneAlert.builder().phone("841-874-7784").build(),
-            PhoneAlert.builder().phone("841-874-7462").build(),
-            PhoneAlert.builder().phone("841-874-6512").build(),
-            PhoneAlert.builder().phone("841-874-8547").build());
+    static final List<PhoneAlertDto> phone = List.of(PhoneAlertDto.builder().phone("841-874-7784").build(),
+            PhoneAlertDto.builder().phone("841-874-7462").build(),
+            PhoneAlertDto.builder().phone("841-874-6512").build(),
+            PhoneAlertDto.builder().phone("841-874-8547").build());
 
     private static final List<Person> personList = List.of(Person.builder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build(),
             Person.builder().firstName("Jacob").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6513").email("drk@email.com").build(),
@@ -71,6 +68,12 @@ public class PersonControllerTest {
             FireStation.builder().station("3").addresses(List.of("834 Binoc Ave", "748 Townings Dr", "112 Steppes Pl", "1509 Culver St")).build(),
             FireStation.builder().station("4").addresses(List.of("112 Steppes Pl", "489 Manchester St")).build());
 
+    private static final List<PersonWithMedicalAndEmailDto> personWithMedicalAndEmailDto = List.of(PersonWithMedicalAndEmailDto.builder().firstName("Jacob").lastName("Boyd").address("1509 Culver St").email("drk@email.com").age(58).medications(List.of("doliprane")).allergies(List.of()).build());
+
+    private static final List<PersonEmailDto> email =
+            List.of(PersonEmailDto.builder().email("jaboyd@email.com").build(),
+                    PersonEmailDto.builder().email("drk@email.com").build(),
+                    PersonEmailDto.builder().email("tenz@email.com").build());
 
     @BeforeEach
     void setUp() {
@@ -118,8 +121,8 @@ public class PersonControllerTest {
     @Test
         //http://localhost:8080/childAlert?address=<address>
     void getChildByAddressWithFamilyTest() throws Exception {
-        ChildAlertDto getChildAndFamilyByAddress = ChildAlertDto.builder().firstName("Zach").lastName("Zemicks").age(5).familyMembers(List.of(FamilyMember.builder().firstName("Warren").lastName("Zemicks").age(40).build(),
-                FamilyMember.builder().firstName("Sophia").lastName("Zemicks").age(30).build())).build();
+        ChildAlertDto getChildAndFamilyByAddress = ChildAlertDto.builder().firstName("Zach").lastName("Zemicks").age(5).familyMembers(List.of(FamilyMemberDto.builder().firstName("Warren").lastName("Zemicks").age(40).build(),
+                FamilyMemberDto.builder().firstName("Sophia").lastName("Zemicks").age(30).build())).build();
         when(personService.getChildAndFamilyByAddress("892 Downing Ct")).thenReturn(getChildAndFamilyByAddress);
         when(personRepository.findAll()).thenReturn(personList);
         mockMvc.perform(get("/childAlert?address=892 Downing Ct", "892 Downing Ct")
@@ -128,6 +131,18 @@ public class PersonControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Zach")))
                 .andExpect(jsonPath("$.age", is(5)));
+    }
+
+    @Test
+        //http://localhost:8080/childAlert?address=<address>
+    void getChildByAddressWithFamilyNotFoundTest() throws Exception {
+        ChildAlertDto getChildAndFamilyByAddress = ChildAlertDto.builder().firstName("Zach").lastName("Zemicks").age(5).familyMembers(List.of(FamilyMemberDto.builder().firstName("Warren").lastName("Zemicks").age(40).build(),
+                FamilyMemberDto.builder().firstName("Sophia").lastName("Zemicks").age(30).build())).build();
+        when(personService.getChildAndFamilyByAddress("892 Downing Ct")).thenReturn(getChildAndFamilyByAddress);
+        mockMvc.perform(get("/childAlert?address=892 Downing Ct", "892 Downing Ct")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -143,24 +158,51 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.[3].phone", is("841-874-8547")));
     }
 
-//    @Test
-//    //http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
-//    public void getPersonWithMedicalAndEmailTest() throws Exception {
-//        mockMvc.perform(get("/personInfo?firstName=John&lastName=Boyd", "John", "Boyd")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    //http://localhost:8080/communityEmail?city=<city>
-//    public void getPersonEmailTest() throws Exception {
-//        mockMvc.perform(get("/communityEmail?city=Culver", "Culver")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
+    @Test
+        // http://localhost:8080/phoneAlert?firestation=<firestation_number>
+    void getPersonPhoneByStationNotFoundTest() throws Exception {
+        when(personService.getPersonPhoneByStation(1)).thenReturn(phone);
+        mockMvc.perform(get("/phoneAlert?firestation=1", 1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    //http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
+    public void getPersonWithMedicalAndEmailNotFoundTest() throws Exception {
+
+        when(personService.getPersonWithMedicalAndEmail("John","Boyd")).thenReturn(personWithMedicalAndEmailDto);
+        mockMvc.perform(get("/personInfo?firstName=John&lastName=Boyd", "John", "Boyd")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    //http://localhost:8080/communityEmail?city=<city>
+    public void getPersonEmailTest() throws Exception {
+        when(personRepository.findAll()).thenReturn(personList);
+        when(personService.getPersonEmail("Culver")).thenReturn(email);
+        mockMvc.perform(get("/communityEmail?city=Culver", "Culver")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+    @Test
+    //http://localhost:8080/communityEmail?city=<city>
+    public void getPersonEmailNotFoundTest() throws Exception {
+        when(personService.getPersonEmail("Culver")).thenReturn(email);
+        mockMvc.perform(get("/communityEmail?city=Culver", "Culver")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
 
 }

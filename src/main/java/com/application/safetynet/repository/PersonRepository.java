@@ -11,6 +11,8 @@ public interface PersonRepository {
 
     List<Person> findAll();
 
+    boolean findByCity(String city);
+
     void delete(Person personDelete);
 
     Person update(Person personUpdate);

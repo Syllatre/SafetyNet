@@ -4,9 +4,9 @@ import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
 import com.application.safetynet.model.dto.ChildAlertDto;
-import com.application.safetynet.model.dto.FamilyMember;
-import com.application.safetynet.model.dto.PersonEmail;
-import com.application.safetynet.model.dto.PhoneAlert;
+import com.application.safetynet.model.dto.FamilyMemberDto;
+import com.application.safetynet.model.dto.PersonEmailDto;
+import com.application.safetynet.model.dto.PhoneAlertDto;
 import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.MedicalRecordsRepository;
 import com.application.safetynet.repository.PersonRepository;
@@ -89,7 +89,7 @@ public class PersonServiceTest {
         when(fireStationService.getPersonByAddress("1509 Culver St")).thenReturn(getPersonByAddressList);
         ChildAlertDto childAndFamilyByAddressDto = personService.getChildAndFamilyByAddress("1509 Culver St");
         System.out.println(childAndFamilyByAddressDto);
-        List<FamilyMember> familyMembers = childAndFamilyByAddressDto.getFamilyMembers();
+        List<FamilyMemberDto> familyMembers = childAndFamilyByAddressDto.getFamilyMembers();
         assertEquals(childAndFamilyByAddressDto.getFirstName(), "Tenley");
         assertEquals(familyMembers.size(), 2);
     }
@@ -102,7 +102,7 @@ public class PersonServiceTest {
         addresses.add("748 Townings Dr");
         addresses.add("112 Steppes Pl");
         when(fireStationService.getAddressByStationNumber(3)).thenReturn(addresses);
-        List<PhoneAlert> getPersonPhoneByStation = personService.getPersonPhoneByStation(3);
+        List<PhoneAlertDto> getPersonPhoneByStation = personService.getPersonPhoneByStation(3);
         assertEquals(getPersonPhoneByStation.size(), 2);
 
     }
@@ -110,10 +110,10 @@ public class PersonServiceTest {
     @Test
     void getPersonEmailTest() {
         when(personRepository.findAll()).thenReturn(personList);
-        List<PersonEmail> getPersonEmail = personService.getPersonEmail("Culver");
+        List<PersonEmailDto> getPersonEmail = personService.getPersonEmail("Culver");
         assertEquals(getPersonEmail.size(), 7);
         boolean emailPeter = false;
-        for (PersonEmail element : getPersonEmail) {
+        for (PersonEmailDto element : getPersonEmail) {
             if (element.getEmail().equals("jpeter@email.com")) {
                 emailPeter = true;
             }
@@ -123,12 +123,21 @@ public class PersonServiceTest {
     }
 
     @Test
+    void getPersonWithMedicalAndEmailWithLastNameTest() {
+        when(personRepository.findAll()).thenReturn(personList);
+        when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
+        List result = personService.getPersonWithMedicalAndEmail(null,"Boyd");
+        System.out.println(result);
+        assertEquals(result.size(), 4);
+    }
+
+    @Test
     void getPersonWithMedicalAndEmailTest() {
         when(personRepository.findAll()).thenReturn(personList);
         when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
         List result = personService.getPersonWithMedicalAndEmail("John", "Boyd");
         System.out.println(result);
-        assertEquals(result.size(), 4);
+        assertEquals(result.size(), 1);
     }
 
     @Test

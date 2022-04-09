@@ -13,6 +13,7 @@ public interface FireStationRepository {
 
     List<FireStation> findAll();
 
+
     Optional<FireStation> findByStation(String station);
 
     void deleteFireStation(FireStationDto id);

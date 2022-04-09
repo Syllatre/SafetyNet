@@ -3,9 +3,10 @@ package com.application.safetynet.service;
 import com.application.safetynet.model.FireStation;
 import com.application.safetynet.model.MedicalRecord;
 import com.application.safetynet.model.Person;
-import com.application.safetynet.model.dto.CountChildAndAdult;
+import com.application.safetynet.model.dto.CountChildAndAdultDto;
+import com.application.safetynet.model.dto.FamilyByStationDto;
+import com.application.safetynet.model.dto.FireDto;
 import com.application.safetynet.model.dto.FloodDto;
-import com.application.safetynet.model.dto.PersonWithMedicalRecordAndAgeDto;
 import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.MedicalRecordsRepository;
 import com.application.safetynet.repository.PersonRepository;
@@ -101,7 +102,7 @@ public class FireStationServiceTest {
         List<String> addresses = new ArrayList();
 
         when(fireStationRepository.findAll()).thenReturn(fireStationList);
-        CountChildAndAdult countAdultAndChild = fireStationService.countAdultAndChild(4);
+        CountChildAndAdultDto countAdultAndChild = fireStationService.countAdultAndChild(4);
         System.out.println(countAdultAndChild);
         assertEquals(countAdultAndChild.getPersonOverEighteen(), 3);
         assertEquals(countAdultAndChild.getPersonUnderEighteen(), 0);
@@ -168,10 +169,12 @@ public class FireStationServiceTest {
         when(personRepository.findAll()).thenReturn(personList);
         when(medicalRecordsRepository.findAll()).thenReturn(medicalRecordList);
         when(fireStationRepository.findAll()).thenReturn(fireStationList);
-        List<PersonWithMedicalRecordAndAgeDto> getPersonWithMedicalAndEmail = fireStationService.getPersonAndMedicalRecordPerAddress("1509 Culver St");
-        PersonWithMedicalRecordAndAgeDto person = getPersonWithMedicalAndEmail.get(0);
-        assertEquals(getPersonWithMedicalAndEmail.size(), 3);
-        assertEquals(person.getLastName(), "Boyd");
-        assertTrue(person.getAllergies().contains("nillacilan"));
+        FireDto getPersonWithMedicalAndEmail = fireStationService.getPersonAndMedicalRecordPerAddress("1509 Culver St");
+        List<FamilyByStationDto> person = getPersonWithMedicalAndEmail.getDeservedPeople();
+        assertEquals(person.get(0).getFirstName(),"John");
+        assertEquals(person.get(0).getAge(),38);
+        assertTrue(getPersonWithMedicalAndEmail.getStationNumber().contains("3"));
+        System.out.println(person);
+        System.out.println(getPersonWithMedicalAndEmail);
     }
 }

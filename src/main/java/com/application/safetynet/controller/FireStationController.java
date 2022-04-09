@@ -3,10 +3,10 @@ package com.application.safetynet.controller;
 import com.application.safetynet.exceptions.AddressNotExistException;
 import com.application.safetynet.exceptions.FireStationNotExistException;
 import com.application.safetynet.model.FireStation;
-import com.application.safetynet.model.dto.CountChildAndAdult;
+import com.application.safetynet.model.dto.CountChildAndAdultDto;
+import com.application.safetynet.model.dto.FireDto;
 import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.model.dto.FloodDto;
-import com.application.safetynet.model.dto.PersonWithMedicalRecordAndAgeDto;
 import com.application.safetynet.repository.FireStationRepository;
 import com.application.safetynet.repository.PersonRepository;
 import com.application.safetynet.service.FireStationService;
@@ -42,10 +42,10 @@ public class FireStationController {
      */
     //http://localhost:8080/firestation?stationNumber=<station_number>
     @GetMapping("/firestation")
-    public CountChildAndAdult getAdultAndChildInStation(@RequestParam(name = "stationNumber") int id) throws IOException {
+    public CountChildAndAdultDto getAdultAndChildInStation(@RequestParam(name = "stationNumber") int id) throws IOException {
         boolean stationExist = fireStationRepository.findAll().stream().anyMatch(station -> Integer.parseInt(station.getStation()) == id);
         if (!stationExist) throw new FireStationNotExistException("La station "+id+" que vous avez saisie n'existe pas");
-        logger.info("List of child and adult in station{}", id);
+        logger.debug("List of child and adult in station{}", id);
         return fireStationService.countAdultAndChild(id);
     }
 
@@ -57,8 +57,8 @@ public class FireStationController {
      */
     //http://localhost:8080/fire?address=<address>
     @GetMapping("fire")
-    public List<PersonWithMedicalRecordAndAgeDto> getPersonAndMedicalRecordPerAddress(@RequestParam(name = "address") final String address) {
-        logger.info("List of medical records by address {}", address);
+    public FireDto getPersonAndMedicalRecordPerAddress(@RequestParam(name = "address") final String address) {
+        logger.debug("List of medical records by address {}", address);
         boolean addressExist = personRepository.findAll().stream().anyMatch(element -> element.getAddress().equalsIgnoreCase(address));
         if (!addressExist) throw new AddressNotExistException("L'adresse "+address+" que vous avez saisie n'existe pas dans la base de donnée");
         return fireStationService.getPersonAndMedicalRecordPerAddress(address);
@@ -83,7 +83,7 @@ public class FireStationController {
 
     @PostMapping("/firestation")
     public FireStation addFireStation(@Valid @RequestBody FireStationDto fireStationDto) {
-        logger.info("Creating firestation {}", fireStationDto);
+        logger.debug("Creating firestation {}", fireStationDto);
         List<String> address = new ArrayList<>();
 
         address.add(fireStationDto.getAddress());
@@ -94,7 +94,7 @@ public class FireStationController {
 
     @PutMapping("/firestation/{station}")
     public FireStation updateFireStation( @Valid @PathVariable("station") final String station,@Valid @RequestBody FireStationDto fireStationDto) {
-        logger.info("Updating firestation {}", fireStationDto);
+        logger.debug("Updating firestation {}", fireStationDto);
         Optional<FireStation> f = fireStationService.getFireStation(station);
         if (f.isPresent()) {
             FireStation currentFireStation = f.get();
@@ -118,7 +118,7 @@ public class FireStationController {
 
     @DeleteMapping("/firestation")
     public void deleteFireStation(@RequestBody FireStationDto id) {
-        logger.error("Deleting firestation {}", id);
+        logger.debug("Deleting firestation {}", id);
         fireStationService.deleteFireStations(id);
     }
 }

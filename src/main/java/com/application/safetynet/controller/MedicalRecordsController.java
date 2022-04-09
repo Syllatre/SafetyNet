@@ -18,19 +18,19 @@ public class MedicalRecordsController {
 
     @DeleteMapping("/medicalrecords")
     public void deletePerson(@RequestBody MedicalRecord medicalRecordsDelete) {
-        logger.info("Deleting medical record {}", medicalRecordsDelete);
+        logger.debug("Deleting medical record {}", medicalRecordsDelete);
         medicalRecordsService.delete(medicalRecordsDelete);
     }
 
     @PostMapping("/medicalrecords")
     public MedicalRecord addMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
-        logger.info("Creating medical record {}", medicalRecord);
+        logger.debug("Creating medical record {}", medicalRecord);
         return medicalRecordsService.createMedicalRecords(medicalRecord);
     }
 
     @PutMapping("/medicalrecords")
     MedicalRecord updateMedicalRecords(@RequestBody MedicalRecord medicalRecordUpdate) {
-        logger.info("Updating medical record {}", medicalRecordUpdate);
+        logger.debug("Updating medical record {}", medicalRecordUpdate);
         return medicalRecordsService.update(medicalRecordUpdate);
     }
 }

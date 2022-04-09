@@ -2,12 +2,12 @@ package com.application.safetynet.model.dto;
 
 import java.util.List;
 
-public class CountChildAndAdult {
+public class CountChildAndAdultDto {
     private List<PersonDto> personList;
     private int personUnderEighteen;
     private int personOverEighteen;
 
-    public CountChildAndAdult(List<PersonDto> personList, int personUnderEighteen, int personOverEighteen) {
+    public CountChildAndAdultDto(List<PersonDto> personList, int personUnderEighteen, int personOverEighteen) {
         this.personList = personList;
         this.personUnderEighteen = personUnderEighteen;
         this.personOverEighteen = personOverEighteen;

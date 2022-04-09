@@ -28,7 +28,7 @@ public class InMemoryPersonRepository implements PersonRepository {
     public void init() throws IOException {
         String content = null;
         try {
-            logger.info(" Person data initialized");
+            logger.debug(" Person data initialized");
             File file = ResourceUtils.getFile("classpath:data.json");
             content = Files.readString(file.toPath());
         } catch (IOException e) {
@@ -55,12 +55,17 @@ public class InMemoryPersonRepository implements PersonRepository {
     }
 
     @Override
+    public boolean findByCity(String city) {
+        return findAll().stream().anyMatch(element -> element.getCity().equalsIgnoreCase(city));
+    }
+
+    @Override
     public void delete(Person personDelete) {
         boolean deleted = stringPersonMap.values().removeIf(person -> personDelete.getFirstName().equalsIgnoreCase(person.getFirstName())
                 && personDelete.getLastName().equalsIgnoreCase(person.getLastName()));
         if (deleted) {
-            logger.info(personDelete.getFirstName() + " " + personDelete.getLastName() + " is delete");
-            logger.info("now there is " + stringPersonMap.size() + " persons");
+            logger.debug(personDelete.getFirstName() + " " + personDelete.getLastName() + " is delete");
+            logger.debug("now there is " + stringPersonMap.size() + " persons");
         } else {
             logger.error("nobody knows as" + personDelete.getFirstName() + " " + personDelete.getLastName());
         }
@@ -71,11 +76,11 @@ public class InMemoryPersonRepository implements PersonRepository {
         for (Person person : stringPersonMap.values()) {
             if (personUpdate.getFirstName().equalsIgnoreCase(person.getFirstName())
                     && personUpdate.getFirstName().equalsIgnoreCase(person.getFirstName())) {
-                logger.info(personUpdate.getFirstName() + " " + personUpdate.getLastName()+"is update");
                 person.setCity(personUpdate.getCity());
                 person.setEmail(personUpdate.getEmail());
                 person.setPhone(personUpdate.getPhone());
                 person.setZip(personUpdate.getZip());
+                logger.debug(personUpdate.getFirstName() + " " + personUpdate.getLastName()+"is update");
             }
         }
         return personUpdate;
@@ -86,7 +91,7 @@ public class InMemoryPersonRepository implements PersonRepository {
         logger.info(person.getFirstName() + " " + person.getLastName());
         try {
             stringPersonMap.put(person.getFirstName() + " " + person.getLastName(), person);
-            logger.info(person.getFirstName() + " " + person.getLastName() + " is added");
+            logger.debug(person.getFirstName() + " " + person.getLastName() + " is added");
         } catch (Exception e) {
             logger.error("failed to add the person", e);
         }

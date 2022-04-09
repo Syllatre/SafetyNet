@@ -3,20 +3,20 @@ package com.application.safetynet.model.dto;
 import lombok.Builder;
 
 @Builder
-public class FamilyMember {
+public class FamilyMemberDto {
 
 
     private String firstName;
     private String lastName;
     private int age;
 
-    public FamilyMember(String firstName, String lastName, int age) {
+    public FamilyMemberDto(String firstName, String lastName, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
     }
 
-    public FamilyMember() {
+    public FamilyMemberDto() {
     }
 
     public String getFirstName() {

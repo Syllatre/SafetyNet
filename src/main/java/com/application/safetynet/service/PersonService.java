@@ -49,11 +49,11 @@ public class PersonService {
     public ChildAlertDto getChildAndFamilyByAddress(String address) {
         Map<String, MedicalRecord> medicalRecordMap = stringMedicalRecordMap();
         List<Person> getPersonByAddress = fireStationService.getPersonByAddress(address);
-        List<FamilyMember> familyMembersList = new ArrayList<>();
+        List<FamilyMemberDto> familyMembersList = new ArrayList<>();
         for(Person person : getPersonByAddress){
             String birthdate = medicalRecordMap.get(person.getFirstName() + " " + person.getLastName()).getBirthdate();
             int age = ageCalculation(birthdate);
-            FamilyMember familyMember = new FamilyMember(person.getFirstName(), person.getLastName(), age);
+            FamilyMemberDto familyMember = new FamilyMemberDto(person.getFirstName(), person.getLastName(), age);
             familyMembersList.add(familyMember);
         }
         ChildAlertDto childAlertDto=null;
@@ -62,8 +62,8 @@ public class PersonService {
             int age = ageCalculation(birthdate);
 
             if (age <= 18) {
-                List <FamilyMember> memberFamily = new ArrayList<>();
-                List <FamilyMember> memberFamilyTemp = familyMembersList.stream().filter(e->e.getLastName().equals(persons.getLastName())).collect(Collectors.toList());
+                List <FamilyMemberDto> memberFamily = new ArrayList<>();
+                List <FamilyMemberDto> memberFamilyTemp = familyMembersList.stream().filter(e->e.getLastName().equals(persons.getLastName())).collect(Collectors.toList());
                 memberFamilyTemp.forEach(e->{
                     if(!e.getFirstName().equals(persons.getFirstName()))
                     memberFamily.add(e);
@@ -76,34 +76,20 @@ public class PersonService {
         return childAlertDto;
     }
 
-    public List<PhoneAlert> getPersonPhoneByStation(int station) throws IOException {
-        List<Person> personByStationAddress = getPersonByStationAddress(station);
-        Set<String> phone = new HashSet<>();
-        List<PhoneAlert> phoneResult = new ArrayList<>();
-        for (Person person : personByStationAddress){
-            phone.add(person.getPhone());
-        }
-        for(String element : phone){
-            PhoneAlert phoneAlert = new PhoneAlert(element);
-            phoneResult.add(phoneAlert);
-        }
-        return phoneResult;
+    public List<PhoneAlertDto> getPersonPhoneByStation(int station) throws IOException {
+        return getPersonByStationAddress(station)
+                .stream()
+                .map(Person::getPhone)
+                .distinct()
+                .map(PhoneAlertDto::new).collect(Collectors.toList());
     }
 
-    public List<PersonEmail> getPersonEmail(String city){
-        List<Person> personList = personRepository.findAll();
-        Set<String> email = new HashSet<>();
-        List<PersonEmail> emailResult = new ArrayList<>();
-        for(Person person : personList){
-            if(person.getCity().equals(city)){
-                email.add(person.getEmail());
-            }
-        }
-        for(String element : email){
-            PersonEmail personEmail = new PersonEmail(element);
-            emailResult.add(personEmail);
-        }
-        return emailResult;
+    public List<PersonEmailDto> getPersonEmail(String city){
+        return personRepository.findAll().stream()
+                .map(Person::getEmail)
+                .distinct()
+                .map(PersonEmailDto::new)
+                .collect(Collectors.toList());
     }
 
     public List<PersonWithMedicalAndEmailDto> getPersonWithMedicalAndEmail(String firstName, String lastName){
@@ -118,8 +104,15 @@ public class PersonService {
             PersonWithMedicalAndEmailDto person = new PersonWithMedicalAndEmailDto(persons.getFirstName(),persons.getLastName(), persons.getAddress(),persons.getEmail(),age,medications,allergies);
             personWithMedicalAndEmailList.add(person);
         }
-        List<PersonWithMedicalAndEmailDto> person =personWithMedicalAndEmailList.stream().filter(e-> e.getLastName().equals(lastName)).collect(Collectors.toList());
-        return person;
+        if(firstName ==null){
+            List<PersonWithMedicalAndEmailDto> personWithFirstName =personWithMedicalAndEmailList.stream().filter(e-> e.getLastName().equals(lastName)).collect(Collectors.toList());
+        return personWithFirstName;}
+        else{
+            List<PersonWithMedicalAndEmailDto> personWithFirstNameAndLastName = personWithMedicalAndEmailList
+                    .stream()
+                    .filter(e-> e.getLastName().equalsIgnoreCase(lastName)&&e.getFirstName().equalsIgnoreCase(firstName)).collect(Collectors.toList());
+            return personWithFirstNameAndLastName;
+        }
     }
 
     public int ageCalculation(String birthdate) {

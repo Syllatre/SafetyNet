@@ -78,10 +78,10 @@ public class FireStationService {
                 .map(station -> station.getStation()).collect(Collectors.toList());
     }
 
-    public CountChildAndAdult countAdultAndChild(int station) throws IOException {
+    public CountChildAndAdultDto countAdultAndChild(int station) throws IOException {
         Map<String, MedicalRecord> medicalRecordMap = stringMedicalRecordMap();
         List<Person> getPersonByStationAddress = getPersonByStationAddress(station);
-        CountChildAndAdult countChildAndAdult;
+        CountChildAndAdultDto countChildAndAdult;
         int ageUnderEighteen=0;
         int ageOverEighteen=0;
         for (Person persons : getPersonByStationAddress) {
@@ -94,7 +94,7 @@ public class FireStationService {
             }
         }
         List<PersonDto> personDto = getPersonByStationAddress.stream().map(Person::toPersonDto).collect(Collectors.toList());
-        countChildAndAdult = new CountChildAndAdult(personDto,ageUnderEighteen,ageOverEighteen);
+        countChildAndAdult = new CountChildAndAdultDto(personDto,ageUnderEighteen,ageOverEighteen);
         return countChildAndAdult;
     }
 
@@ -151,20 +151,21 @@ public class FireStationService {
         return result;
     }
 
-    public List<PersonWithMedicalRecordAndAgeDto> getPersonAndMedicalRecordPerAddress(String address){
+    public FireDto getPersonAndMedicalRecordPerAddress(String address){
         Map<String,MedicalRecord> stringMedicalRecordMap = stringMedicalRecordMap();
         List<Person> personByAddress = getPersonByAddress(address);
         List<String> stationByAddress = getStationByAddress(address);
-        List<PersonWithMedicalRecordAndAgeDto> personWithMedicalRecordAndAgeDto = new ArrayList<>();
+        List<FamilyByStationDto> deservedPeopleList =new ArrayList<>();
         for (Person persons : personByAddress) {
             String birthdate = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getBirthdate();
             int age = ageCalculation(birthdate);
             List<String> medications = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getMedications();
             List<String> allergies = stringMedicalRecordMap.get(persons.getFirstName() + " " + persons.getLastName()).getAllergies();
-            PersonWithMedicalRecordAndAgeDto personDto =
-                    new PersonWithMedicalRecordAndAgeDto(persons.getLastName(), persons.getPhone(), age,stationByAddress,medications,allergies);
-            personWithMedicalRecordAndAgeDto.add(personDto);
+            FamilyByStationDto deservedPeople =
+                    new FamilyByStationDto(persons.getFirstName(), persons.getLastName(), persons.getPhone(), age,medications,allergies);
+            deservedPeopleList.add(deservedPeople);
         }
-        return personWithMedicalRecordAndAgeDto;
+        FireDto fireDto = new FireDto(deservedPeopleList,stationByAddress);
+        return fireDto;
     }
 }

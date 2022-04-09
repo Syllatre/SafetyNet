@@ -9,9 +9,9 @@ public class ChildAlertDto {
     private String firstName;
     private String lastName;
     private int age;
-    private List<FamilyMember> familyMembers;
+    private List<FamilyMemberDto> familyMembers;
 
-    public ChildAlertDto(String firstName, String lastName, int age, List<FamilyMember> familyMembers) {
+    public ChildAlertDto(String firstName, String lastName, int age, List<FamilyMemberDto> familyMembers) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -45,11 +45,11 @@ public class ChildAlertDto {
         this.age = age;
     }
 
-    public List<FamilyMember> getFamilyMembers() {
+    public List<FamilyMemberDto> getFamilyMembers() {
         return familyMembers;
     }
 
-    public void setFamilyMembers(List<FamilyMember> familyMembers) {
+    public void setFamilyMembers(List<FamilyMemberDto> familyMembers) {
         this.familyMembers = familyMembers;
     }
 

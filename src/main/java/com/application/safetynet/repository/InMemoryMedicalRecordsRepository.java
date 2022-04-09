@@ -65,8 +65,8 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
         boolean deleted = stringMedicalRecordMap.values().removeIf(medicalRecords -> medicalRecordsDelete.getFirstName().equalsIgnoreCase(medicalRecords.getFirstName())
                 && medicalRecordsDelete.getLastName().equalsIgnoreCase(medicalRecords.getLastName()));
         if (deleted) {
-            logger.info(medicalRecordsDelete.getFirstName() + " " + medicalRecordsDelete.getLastName() + " is delete");
-            logger.info("now there is " + stringMedicalRecordMap.size() + " persons");
+            logger.debug(medicalRecordsDelete.getFirstName() + " " + medicalRecordsDelete.getLastName() + " is delete");
+            logger.debug("now there is " + stringMedicalRecordMap.size() + " persons");
         } else {
             logger.error("nobody knows as" + medicalRecordsDelete.getFirstName() + " " + medicalRecordsDelete.getLastName());
         }
@@ -87,10 +87,10 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
 
     @Override
     public MedicalRecord create(MedicalRecord medicalRecords) {
-        logger.info(medicalRecords.getFirstName() + " " + medicalRecords.getLastName());
+        logger.debug(medicalRecords.getFirstName() + " " + medicalRecords.getLastName());
         try {
             stringMedicalRecordMap.put(medicalRecords.getFirstName() + " " + medicalRecords.getLastName(), medicalRecords);
-            logger.info(medicalRecords.getFirstName() + " " + medicalRecords.getLastName() + " is added");
+            logger.debug(medicalRecords.getFirstName() + " " + medicalRecords.getLastName() + " is added");
         } catch (Exception e) {
             logger.error("failed to add the MedicalRecords", e);
         }

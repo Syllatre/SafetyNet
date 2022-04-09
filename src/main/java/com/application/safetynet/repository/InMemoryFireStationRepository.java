@@ -26,7 +26,7 @@ public class InMemoryFireStationRepository implements FireStationRepository {
     public void init() throws IOException {
         String content = null;
         try {
-            logger.info(" FireStation data initialized");
+            logger.debug(" FireStation data initialized");
             File file = ResourceUtils.getFile("classpath:data.json");
             content = Files.readString(file.toPath());
         } catch (IOException e) {
@@ -50,7 +50,7 @@ public class InMemoryFireStationRepository implements FireStationRepository {
 
     @Override
     public List<FireStation> findAll() {
-        logger.info("show all fire station");
+        logger.debug("show all fire station");
         return new ArrayList<>(stringFireStationMap.values());
     }
 
@@ -63,14 +63,14 @@ public class InMemoryFireStationRepository implements FireStationRepository {
     public void deleteFireStation(FireStationDto id) {
         if (id.getAddress() != null) {
             stringFireStationMap.entrySet().removeIf(e -> e.getValue().getAddresses().contains(id.getAddress()));
-            logger.info(id.getAddress() + "is deleted");
-            logger.info("now there is " + stringFireStationMap.size() + " Firestations");
+            logger.debug(id.getAddress() + "is deleted");
+            logger.debug("now there is " + stringFireStationMap.size() + " Firestations");
 
         }
         if (id.getStation() != null) {
             stringFireStationMap.entrySet().removeIf(e -> e.getValue().getStation().equals(id.getStation()));
-            logger.info(id.getStation() + "is deleted");
-            logger.info("now there is " + stringFireStationMap.size() + " Firestations");
+            logger.debug(id.getStation() + "is deleted");
+            logger.debug("now there is " + stringFireStationMap.size() + " Firestations");
         }
     }
 
@@ -79,4 +79,5 @@ public class InMemoryFireStationRepository implements FireStationRepository {
     public FireStation save(FireStation fireStations) {
         return stringFireStationMap.put(fireStations.getStation(), fireStations);
     }
+
 }

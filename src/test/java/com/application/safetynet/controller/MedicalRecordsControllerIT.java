@@ -34,7 +34,7 @@ public class MedicalRecordsControllerIT {
     @Test
     public void addMedicalRecordsIT() throws Exception {
         mockMvc.perform(post("/medicalrecords")
-                        .content(asJsonString(new MedicalRecord("Aimen", "sasa", "30/08/97", List.of(), List.of())))
+                        .content(asJsonString(new MedicalRecord("Aimen", "sasa", "08/30/1997", List.of(), List.of())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -43,7 +43,7 @@ public class MedicalRecordsControllerIT {
     @Test
     public void updateMedicalRecordsIT() throws Exception {
         mockMvc.perform(put("/medicalrecords")
-                        .content(asJsonString(new MedicalRecord("Zach", "Zemicks", "15/15/65", List.of(), List.of())))
+                        .content(asJsonString(new MedicalRecord("Zach", "Zemicks", "15/08/1965", List.of(), List.of())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

@@ -3,10 +3,10 @@ package com.application.safetynet.model.dto;
 import lombok.Builder;
 
 @Builder
-public class PersonEmail {
+public class PersonEmailDto {
     private String email;
 
-    public PersonEmail(String email) {
+    public PersonEmailDto(String email) {
         this.email = email;
     }
 

@@ -12,6 +12,7 @@ public class MedicalRecord {
     private String firstName;
     @NotNull
     private String lastName;
+    @NotNull
     @Past
     private String birthdate;
     private List<String> medications;

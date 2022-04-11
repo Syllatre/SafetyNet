@@ -2,7 +2,7 @@ package com.application.safetynet.model;
 
 import com.application.safetynet.model.dto.PersonDto;
 import lombok.Builder;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.validation.constraints.Email;
 

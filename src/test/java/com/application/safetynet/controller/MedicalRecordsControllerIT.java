@@ -2,7 +2,6 @@ package com.application.safetynet.controller;
 
 import com.application.safetynet.model.MedicalRecord;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,7 +31,6 @@ public class MedicalRecordsControllerIT {
         }
     }
 
-    @Order(1)
     @Test
     public void addMedicalRecordsIT() throws Exception {
         mockMvc.perform(post("/medicalrecords")
@@ -42,7 +40,6 @@ public class MedicalRecordsControllerIT {
                 .andExpect(status().isOk());
     }
 
-    @Order(2)
     @Test
     public void updateMedicalRecordsIT() throws Exception {
         mockMvc.perform(put("/medicalrecords")
@@ -54,7 +51,6 @@ public class MedicalRecordsControllerIT {
 
     }
 
-    @Order(3)
     @Test
     public void deleteMedicalRecordsIT() throws Exception {
         mockMvc.perform(delete("/medicalrecords")

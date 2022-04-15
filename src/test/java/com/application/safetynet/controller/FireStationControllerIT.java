@@ -5,7 +5,6 @@ import com.application.safetynet.model.dto.FireStationDto;
 import com.application.safetynet.repository.InMemoryFireStationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,7 +48,6 @@ public class FireStationControllerIT {
         }
     }
 
-    @Order(1)
     @Test
     public void addFireStationIT() throws Exception {
         FireStationDto fireStation = new FireStationDto("10", "address");
@@ -60,7 +58,6 @@ public class FireStationControllerIT {
 
     }
 
-    @Order(2)
     @Test
     public void updateFireStationIT() throws Exception {
         mockMvc.perform(put("/firestation/{station}", 2)
@@ -72,7 +69,6 @@ public class FireStationControllerIT {
 
     }
 
-    @Order(3)
     @Test
     //http://localhost:8080/firestation?stationNumber=<station_number>
     public void getAdultAndChildInStationIT() throws Exception {
@@ -83,7 +79,6 @@ public class FireStationControllerIT {
 
     }
 
-    @Order(4)
     @Test
     //http://localhost:8080/flood/stations?stations=<a list of station_numbers>
     public void getFamilyByStationIT() throws Exception {
@@ -93,7 +88,6 @@ public class FireStationControllerIT {
                 .andExpect(status().isOk());
     }
 
-    @Order(5)
     @Test
     //http://localhost:8080/fire?address=<address>
     public void getPersonWithMedicalAndEmailTest() throws Exception {
@@ -103,7 +97,6 @@ public class FireStationControllerIT {
                 .andExpect(status().isOk());
     }
 
-    @Order(6)
     @Test
     public void deleteFireStationIT() throws Exception {
         mockMvc.perform(delete("/firestation/")

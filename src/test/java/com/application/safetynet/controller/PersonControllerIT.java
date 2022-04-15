@@ -3,7 +3,6 @@ package com.application.safetynet.controller;
 
 import com.application.safetynet.model.Person;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,7 +33,6 @@ public class PersonControllerIT {
         }
     }
 
-    @Order(1)
     @Test
     //http://localhost:8080/childAlert?address=<address>
     public void getChildByAddressWithFamilyIT() throws Exception {
@@ -46,7 +44,6 @@ public class PersonControllerIT {
                 .andExpect(jsonPath("$.familyMembers", hasSize(2)));
     }
 
-    @Order(2)
     @Test
     //http://localhost:8080/phoneAlert?firestation=<firestation_number>
     public void getPersonPhoneByStationIT() throws Exception {
@@ -57,7 +54,6 @@ public class PersonControllerIT {
 
     }
 
-    @Order(3)
     @Test
     //http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
     public void getPersonWithMedicalAndEmailIT() throws Exception {
@@ -67,7 +63,6 @@ public class PersonControllerIT {
                 .andExpect(status().isOk());
     }
 
-    @Order(4)
     @Test
     //http://localhost:8080/communityEmail?city=<city>
     public void getPersonEmailIT() throws Exception {
@@ -78,7 +73,6 @@ public class PersonControllerIT {
                 .andExpect(status().isOk());
     }
 
-    @Order(5)
     @Test
     public void addPersonIT() throws Exception {
         mockMvc.perform(post("/person")
@@ -88,7 +82,6 @@ public class PersonControllerIT {
                 .andExpect(status().isOk());
     }
 
-    @Order(6)
     @Test
     public void updatePersonIT() throws Exception {
         mockMvc.perform(put("/person")
@@ -99,7 +92,6 @@ public class PersonControllerIT {
 
     }
 
-    @Order(7)
     @Test
     public void deletePersonIT() throws Exception {
         mockMvc.perform(delete("/person")

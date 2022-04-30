@@ -24,15 +24,17 @@ import java.util.stream.Collectors;
 public class FireStationService {
     private static final Logger logger = LoggerFactory.getLogger(FireStationService.class);
 
-    @Autowired
     FireStationRepository fireStationRepository;
 
-    @Autowired
     PersonRepository personRepository;
 
-    @Autowired
     MedicalRecordsRepository medicalRecordsRepository;
 
+    public FireStationService(FireStationRepository fireStationRepository, PersonRepository personRepository, MedicalRecordsRepository medicalRecordsRepository) {
+        this.fireStationRepository = fireStationRepository;
+        this.personRepository = personRepository;
+        this.medicalRecordsRepository = medicalRecordsRepository;
+    }
 
     public Optional<FireStation> getFireStation(final String station) {
         return fireStationRepository.findByStation(station);
@@ -177,5 +179,9 @@ public class FireStationService {
         }
         FireDto fireDto = new FireDto(deservedPeopleList, stationByAddress);
         return fireDto;
+    }
+
+    public List<FireStation> findAll(){
+        return fireStationRepository.findAll();
     }
 }

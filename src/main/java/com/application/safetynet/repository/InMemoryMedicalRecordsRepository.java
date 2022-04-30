@@ -88,12 +88,8 @@ public class InMemoryMedicalRecordsRepository implements MedicalRecordsRepositor
     @Override
     public MedicalRecord create(MedicalRecord medicalRecords) {
         logger.debug(medicalRecords.getFirstName() + " " + medicalRecords.getLastName());
-        try {
             stringMedicalRecordMap.put(medicalRecords.getFirstName() + " " + medicalRecords.getLastName(), medicalRecords);
             logger.debug(medicalRecords.getFirstName() + " " + medicalRecords.getLastName() + " is added");
-        } catch (Exception e) {
-            logger.error("failed to add the MedicalRecords", e);
-        }
         return medicalRecords;
     }
 }

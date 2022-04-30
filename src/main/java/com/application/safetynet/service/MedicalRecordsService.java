@@ -9,9 +9,11 @@ import java.util.List;
 
 @Service
 public class MedicalRecordsService {
-    @Autowired
     MedicalRecordsRepository medicalRecordsRepository;
 
+    public MedicalRecordsService(MedicalRecordsRepository medicalRecordsRepository) {
+        this.medicalRecordsRepository = medicalRecordsRepository;
+    }
 
     public MedicalRecord createMedicalRecords(MedicalRecord medicalRecord) {
         return medicalRecordsRepository.create(medicalRecord);
@@ -23,5 +25,9 @@ public class MedicalRecordsService {
 
     public MedicalRecord update(MedicalRecord medicalRecordsUpdate) {
         return medicalRecordsRepository.update(medicalRecordsUpdate);
+    }
+
+    public List<MedicalRecord> findAll(){
+        return medicalRecordsRepository.findAll();
     }
 }

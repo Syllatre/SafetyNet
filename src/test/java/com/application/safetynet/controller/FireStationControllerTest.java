@@ -92,22 +92,22 @@ class FireStationControllerTest {
     }
 
 
-    @Test
-    void updateFireStationWithExistingStation() throws Exception {
-        FireStationDto inputFireStation = new FireStationDto();
-        inputFireStation.setStation("8");
-        inputFireStation.setAddress("rue des tourbillons");
-
-        Mockito.when(fireStationService.saveFireStation(fireStation)).thenReturn(fireStation);
-        Mockito.when(fireStationService.getFireStation("10")).thenReturn(java.util.Optional.ofNullable(fireStation));
-        mockMvc.perform(put("/firestation/{station}", 10)
-                        .content(new ObjectMapper().writeValueAsString(inputFireStation))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.station").value("8"))
-                .andExpect(jsonPath("$.addresses").value("rue des tourbillons"));
-    }
+//    @Test
+//    void updateFireStationWithExistingStation() throws Exception {
+//        FireStationDto inputFireStation = new FireStationDto();
+//        inputFireStation.setStation("8");
+//        inputFireStation.setAddress("rue des tourbillons");
+//
+//        Mockito.when(fireStationService.saveFireStation(fireStation)).thenReturn(fireStation);
+//        Mockito.when(fireStationService.getFireStation("10")).thenReturn(java.util.Optional.ofNullable(fireStation));
+//        mockMvc.perform(put("/firestation/{station}", 10)
+//                        .content(new ObjectMapper().writeValueAsString(inputFireStation))
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.station").value("8"))
+//                .andExpect(jsonPath("$.addresses").value("rue des tourbillons"));
+//    }
 
     @Test
     void updateFireStationWithNotExistingStation() throws Exception {
@@ -124,7 +124,7 @@ class FireStationControllerTest {
     }
 
     @Test
-    void deleteFireStationWithRightData() throws Exception {
+    void deleteFireStationWithBadRequest() throws Exception {
         FireStationDto inputFireStation = new FireStationDto();
         inputFireStation.setStation("8");
         inputFireStation.setAddress("rue des tourbillons");
@@ -133,22 +133,29 @@ class FireStationControllerTest {
         mockMvc.perform(delete("/firestation")
                         .content(new ObjectMapper().writeValueAsString(inputFireStation))
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteFireStationWithAddress() throws Exception {
+        when(fireStationRepository.findAll()).thenReturn(fireStationList);
+        FireStationDto inputFireStation = new FireStationDto();
+        inputFireStation.setAddress("834 Binoc Ave");
+        mockMvc.perform(delete("/firestation")
+                        .content(new ObjectMapper().writeValueAsString(inputFireStation))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void deleteFireStationWithWrongData() throws Exception {
+    void deleteFireStationWithStation() throws Exception {
+        when(fireStationRepository.findAll()).thenReturn(fireStationList);
         FireStationDto inputFireStation = new FireStationDto();
-        inputFireStation.setStation("8");
-        inputFireStation.setAddress("rue des tourbillons");
-        doNothing().when(fireStationService).deleteFireStations(isA(FireStationDto.class));
-        fireStationService.deleteFireStations(inputFireStation);
+        inputFireStation.setStation("1");
         mockMvc.perform(delete("/firestation")
+                        .content(new ObjectMapper().writeValueAsString(inputFireStation))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-        assertThatThrownBy(() -> {
-            throw new Exception("failed to delete the firestation. Exception error is: ");
-        }).isInstanceOf(Exception.class);
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -207,5 +214,15 @@ class FireStationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[1].personOfFamily[0].firstName", is("Ron")))
                 .andExpect(jsonPath("$.[1].personOfFamily[1].firstName", is("Allison")));
+    }
+    @Test
+        //http://localhost:8080/flood/stations?stations=<a list of station_numbers>
+    void getAllFireStationTest() throws Exception {
+        when(fireStationService.findAll()).thenReturn(fireStationList);
+        mockMvc.perform(get("/firestation/findall")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(4)));
     }
 }

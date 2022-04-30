@@ -19,16 +19,17 @@ import java.util.stream.Collectors;
 @Service
 public class PersonService {
 
-    @Autowired
     PersonRepository personRepository;
 
-    @Autowired
     FireStationService fireStationService;
 
-    @Autowired
     MedicalRecordsRepository medicalRecordsRepository;
 
-
+    public PersonService(PersonRepository personRepository, FireStationService fireStationService, MedicalRecordsRepository medicalRecordsRepository) {
+        this.personRepository = personRepository;
+        this.fireStationService = fireStationService;
+        this.medicalRecordsRepository = medicalRecordsRepository;
+    }
 
     public Person createPerson(Person person) {
         return personRepository.create(person);
@@ -42,9 +43,9 @@ public class PersonService {
         return personRepository.update(personUpdate);
     }
 
-
-
-
+    public List<Person> findAll(){
+        return personRepository.findAll();
+    }
 
     public ChildAlertDto getChildAndFamilyByAddress(String address) {
         Map<String, MedicalRecord> medicalRecordMap = stringMedicalRecordMap();

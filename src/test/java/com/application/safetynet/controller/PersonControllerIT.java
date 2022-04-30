@@ -100,4 +100,12 @@ public class PersonControllerIT {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void findAllIT() throws Exception {
+        mockMvc.perform(get("/person/findall")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

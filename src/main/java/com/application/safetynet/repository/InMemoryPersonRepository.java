@@ -85,12 +85,8 @@ public class InMemoryPersonRepository implements PersonRepository {
     @Override
     public Person create(Person person) {
         logger.info(person.getFirstName() + " " + person.getLastName());
-        try {
-            stringPersonMap.put(person.getFirstName() + " " + person.getLastName(), person);
-            logger.debug(person.getFirstName() + " " + person.getLastName() + " is added");
-        } catch (Exception e) {
-            logger.error("failed to add the person", e);
-        }
+        stringPersonMap.put(person.getFirstName() + " " + person.getLastName(), person);
+        logger.debug(person.getFirstName() + " " + person.getLastName() + " is added");
         return person;
     }
 }

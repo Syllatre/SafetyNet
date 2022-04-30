@@ -105,4 +105,12 @@ public class FireStationControllerIT {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void findAllIT() throws Exception {
+        mockMvc.perform(get("/firestation/findall")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

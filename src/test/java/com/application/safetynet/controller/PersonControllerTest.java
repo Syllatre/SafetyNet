@@ -100,6 +100,16 @@ public class PersonControllerTest {
     }
 
     @Test
+    void deletePersonBadRequest() throws Exception {
+        Person inputPerson = new Person();
+        inputPerson.setLastName("Petit");
+        mockMvc.perform(delete("/person")
+                        .content(new ObjectMapper().writeValueAsString(inputPerson))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void addPerson() throws Exception {
         when(personService.createPerson(person)).thenReturn(person);
         mockMvc.perform(post("/person")
@@ -203,6 +213,14 @@ public class PersonControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
-
-
+    //http://localhost:8080/person/findall
+    @Test
+    public void findAllIT() throws Exception {
+        when(personService.findAll()).thenReturn(personList);
+        mockMvc.perform(get("/person/findall")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(7)));
+    }
 }

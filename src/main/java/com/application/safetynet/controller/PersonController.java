@@ -1,9 +1,6 @@
 package com.application.safetynet.controller;
 
-import com.application.safetynet.exceptions.AddressNotExistException;
-import com.application.safetynet.exceptions.CityNotExistException;
-import com.application.safetynet.exceptions.FireStationNotExistException;
-import com.application.safetynet.exceptions.PersonNotExistException;
+import com.application.safetynet.exceptions.*;
 import com.application.safetynet.model.Person;
 import com.application.safetynet.model.dto.ChildAlertDto;
 import com.application.safetynet.model.dto.PersonEmailDto;
@@ -14,7 +11,6 @@ import com.application.safetynet.repository.PersonRepository;
 import com.application.safetynet.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -24,14 +20,18 @@ import java.util.List;
 public class PersonController {
     private static final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
-    @Autowired
     PersonService personService;
 
-    @Autowired
     PersonRepository personRepository;
 
-    @Autowired
     FireStationRepository fireStationRepository;
+
+
+    public PersonController(PersonService personService, PersonRepository personRepository, FireStationRepository fireStationRepository) {
+        this.personService = personService;
+        this.personRepository = personRepository;
+        this.fireStationRepository = fireStationRepository;
+    }
 
     /**
      * Get child with his Family list by address
@@ -46,6 +46,16 @@ public class PersonController {
         if (!addressExist) throw new AddressNotExistException("L'adresse "+address+" que vous avez saisie n'existe pas dans la base de donnée");
         logger.info("List of child and family by address {}", address);
         return personService.getChildAndFamilyByAddress(address);
+    }
+
+
+    /**
+     * Get all persons
+     * @return List of all persons
+     */
+    @GetMapping("person/findall")
+    public List<Person> findAll(){
+        return personService.findAll();
     }
 
     /**
@@ -96,6 +106,7 @@ public class PersonController {
 
     @DeleteMapping("/person")
     public void deletePerson(@RequestBody Person personDelete) {
+        if(personDelete.getFirstName()== null || personDelete.getLastName()== null) throw new BadRequestException("Merci d'indiquer le nom et prenom afin de pouvoir supprimer une personne");
         logger.debug("Deleting person {}", personDelete);
         personService.delete(personDelete);
     }
